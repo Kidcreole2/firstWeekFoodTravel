@@ -1,0 +1,64 @@
+$font-family: "Roboto", sans-serif
+
+*
+    box-sizing: border-box
+    font-family: $font-family
+
+main
+    background-color: #d7d7d7a
+    width: 100%
+    display: flex
+    justify-content: center
+
+    .container
+        max-width: 700px
+        background-color: white
+        padding-left: 20px
+        padding-right: 20px
+
+    input[type="checkbox"]
+        appearance: none
+        display: inline-block
+        width: 20px
+        height: 20px
+        outline: none
+        background-color: black
+        border: 5px dotted black
+
+        &:checked
+            background-color: black
+            border: 5px solid black
+
+    input[type="text"]
+        color: #6a6a6a
+        background-color: transparent
+        border: 0px
+        outline: none
+        padding: 10px 20px
+        border-bottom: 5px solid #6a6a6a
+
+        &:active
+            border-color: black
+            background-color: #d7d7d7a
+
+    .btn
+        background-color: #d7d7d7a
+        padding: 10px 20px
+        border-radius: 5px
+
+        &:hover
+            background-color: black
+
+        &:active
+            background-color: #d7d7d7a
+
+    select
+        outline: none
+        background-color: white
+        padding: 10px 20px
+        border: 5px solid #6a6a6a
+
+        &:hover
+            border-color: black
+
+        

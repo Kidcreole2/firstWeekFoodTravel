@@ -1,0 +1,12 @@
+frontend/node_modules/
+.*
+!.gitignore
+frontend/sass/
+frontend/js/
+backend/test/
+*__pycache__*
+instance/
+test/
+uploads/
+
+*.sqlite
