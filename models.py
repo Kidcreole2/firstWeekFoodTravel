@@ -10,22 +10,24 @@ class Users(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     login = db.Column(db.String(20),unique=True,nullable=False)
     password = db.Column(db.String(20), nullable=False)
-    firstname = db.Column(db.String(20), nullable=False)
-    lastname = db.Column(db.String(20), nullable=False)
-    surname = db.Column(db.String(20), nullable=False)
+    firstname = db.Column(db.String(20))
+    lastname = db.Column(db.String(20))
+    surname = db.Column(db.String(20))
     role = db.Column(db.String(20),nullable=False)
+    phone_number = db.Column(db.String(20))
 
     # связи
     users_orders = db.relationship("Users_Orders", back_populates="users")
     
     
-    def __init__(self, login: str, password: str, firstname: str, lastname: str, surname: str, role):
+    def __init__(self, login: str,phone_number: str, password: str, firstname: str, lastname: str, surname: str, role):
         self.login = login
         self.password = password
         self.lastname = lastname
         self.firstname = firstname
         self.surname = surname
         self.role = role
+        self.phone_number = phone_number
     
     @staticmethod
     def auth_user(login, password) -> str:
@@ -55,6 +57,7 @@ class Users(UserMixin, db.Model):
         old_user.firstname = new_user.firstname
         old_user.lastname = new_user.lastname
         old_user.surname = new_user.surname
+        old_user.phone_number = new_user.phone_number
         db.session.commit()
 
     @staticmethod
@@ -81,8 +84,7 @@ class Users(UserMixin, db.Model):
             else:
                 login = login + random.choice(letters)
         return login
-
-                
+              
 class Goods(UserMixin, db.Model):
     __tablename__ = "goods"
     id = db.Column(db.Integer, primary_key=True)
@@ -94,11 +96,41 @@ class Goods(UserMixin, db.Model):
     # связи
     goods_orders = db.relationship("Goods_Orders", back_populates="goods")
     
+    def __init__(self, title: str, price: int, photo_URL = "", description = ""):
+        self.title = title
+        self.photo_URL = photo_URL
+        self.description = description
+        self.price = price
+        
+    @staticmethod
+    def create(goods):
+        new_task = Goods.query.filter_by(id=goods.id).first()
+        if new_task is None:
+            db.session.add(goods)
+            db.session.commit()
+            return Goods.query.filter_by(id=goods.id).first().id
+        else: 
+            return new_task.id
+        
+    @staticmethod
+    def update(old_goods, new_goods):
+        old_goods = Goods.query.filter_by(id=new_goods.id).first()
+        old_goods.title = new_goods.title
+        old_goods.photo_URL = new_goods.photo_URL
+        old_goods.description = new_goods.description
+        old_goods.price = new_goods.price
+        db.session.commit()
+
+    @staticmethod
+    def delete(goods_id):
+        Goods.query.filter_by(id=goods_id).delete()
+        db.session.commit()
+    
 class Orders(UserMixin, db.Model):
     __tablename__ = "orders"
     id = db.Column(db.Integer, primary_key=True)
     delivery_address = db.Column(db.String(50),nullable=False)
-    delivery_date = db.Column(db.String(20), nullable=False)
+    delivery_date = db.Column(db.DateTime, nullable=False)
     status = db.Column(db.String(20), nullable=False)
     comment = db.Column(db.String(300))
     price = db.Column(db.Integer, nullable=False)
@@ -107,14 +139,72 @@ class Orders(UserMixin, db.Model):
     users_orders = db.relationship("Users_Orders", back_populates="orders")
     goods_orders = db.relationship("Goods_Orders", back_populates="orders")
     
-class Ingridients(UserMixin, db.Model):
-    __tablename__ = "ingridients"
+    def __init__(self, delivery_address: str, delivery_date: str, status: str, comment: str, price: int):
+        self.delivery_address = delivery_address
+        self.delivery_date = delivery_date
+        self.status = status
+        self.comment = comment
+        self.price = price
+        
+    @staticmethod
+    def create(order):
+        new_task = Orders.query.filter_by(id=order.id).first()
+        if new_task is None:
+            db.session.add(order)
+            db.session.commit()
+            return Orders.query.filter_by(id=order.id).first().id
+        else: 
+            return new_task.id
+        
+    @staticmethod
+    def update(old_order, new_order):
+        old_order = Orders.query.filter_by(id=old_order.id).first()
+        old_order.delivery_address = new_order.delivery_address
+        old_order.delivery_date = new_order.delivery_date
+        old_order.status = new_order.status
+        old_order.comment = new_order.comment
+        old_order.price = new_order.price
+        db.session.commit()
+
+    @staticmethod
+    def delete(order_id):
+        Orders.query.filter_by(id=order_id).delete()
+        db.session.commit()
+            
+class Ingridient(UserMixin, db.Model):
+    __tablename__ = "ingridient"
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(20),unique=True,nullable=False)
+    title = db.Column(db.String(20),nullable=False)
     goods_id = db.Column(db.Integer, db.ForeignKey("goods.id"))
     
     # связи
-    goods = db.relationship("Goods", back_populates="ingridients")
+    goods = db.relationship("Goods", back_populates="ingridient")
+    
+    def __init__(self, title: str, goods_id: int):
+        self.title = title
+        self.goods_id = goods_id
+        
+    @staticmethod
+    def create(ingridient):
+        new_ingridient = Ingridient.query.filter_by(id=ingridient.id).first()
+        if new_ingridient is None:
+            db.session.add(ingridient)
+            db.session.commit()
+            return Ingridient.query.filter_by(id=ingridient.id).first().id
+        else: 
+            return new_ingridient.id
+        
+    @staticmethod
+    def update(old_ingridient, new_ingridient):
+        old_ingridient = Ingridient.query.filter_by(id=old_ingridient.id).first()
+        old_ingridient.title = new_ingridient.title
+        old_ingridient.goods_id = new_ingridient.goods_id
+        db.session.commit()
+
+    @staticmethod
+    def delete(ingridient_id):
+        Ingridient.query.filter_by(id=ingridient_id).delete()
+        db.session.commit()
     
 class Users_Orders(UserMixin, db.Model):
     __tablename__ = "users_orders"
@@ -126,6 +216,29 @@ class Users_Orders(UserMixin, db.Model):
     users = db.relationship("Users", back_populates="users_orders")
     order = db.relationship("Order", back_populates="users_orders")
     
+    def __init__(self, user_id: int, order_id: int):
+        self.user_id = user_id
+        self.order_id = order_id
+        
+    @staticmethod
+    def create(users_orders):
+            db.session.add(users_orders)
+            db.session.commit()
+            
+    @staticmethod
+    def delete_by_user(user_id):
+        users = Users_Orders.query.filter_by(user_id=user_id).all()
+        for user in users:
+            Users_Orders.query.filter_by(user_id=user.id).delete()
+        db.session.commit()
+    
+    @staticmethod
+    def delete_by_order(order_id):
+        orders = Users_Orders.query.filter_by(order_id=order_id).all()
+        for order in orders:
+            Users_Orders.query.filter_by(order_id=order.id).delete()
+        db.session.commit()
+    
 class Goods_Orders(UserMixin, db.Model):
     __tablename__ = "goods_orders"
     id = db.Column(db.Integer, primary_key=True)
@@ -136,3 +249,25 @@ class Goods_Orders(UserMixin, db.Model):
     goods = db.relationship("Goods", back_populates="goods_orders")
     order = db.relationship("Order", back_populates="goods_orders")
     
+    def __init__(self, goods_id: int, order_id: int):
+        self.goods_id = goods_id
+        self.order_id = order_id
+        
+    @staticmethod
+    def create(goods_orders):
+            db.session.add(goods_orders)
+            db.session.commit()
+            
+    @staticmethod
+    def delete_by_goods(goods_id):
+        goodses = Goods_Orders.query.filter_by(goods_id=goods_id).all()
+        for goods in goodses:
+            Goods_Orders.query.filter_by(goods_id=goods.id).delete()
+        db.session.commit()
+    
+    @staticmethod
+    def delete_by_order(order_id):
+        orders = Goods_Orders.query.filter_by(order_id=order_id).all()
+        for order in orders:
+            Goods_Orders.query.filter_by(order_id=order.id).delete()
+        db.session.commit()
