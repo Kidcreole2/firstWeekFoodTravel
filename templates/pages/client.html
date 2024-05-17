@@ -1,1 +1,11 @@
-{% extends "base.html" %} {% block content %} <h1>Добро Пожаловать</h1> {% endblock %}
+{% extends "base.html" %} {% block content %}
+<h1>Блюда</h1>
+<div>
+    {% for gooods in goodses %}
+    <div>
+        <!-- Данные о блюде -->
+    </div>
+    <button>Take goods</button>
+    {% endfor %}
+</div>
+{% endblock %}

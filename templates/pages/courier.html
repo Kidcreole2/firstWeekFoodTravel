@@ -1,1 +1,27 @@
-{% extends "base.html" %} {% block content %} <h1>Добро Пожаловать</h1> {% endblock %}
+{% extends "base.html" %} {% block content %}
+{% if current_order %}
+<h1>Заказы</h1>
+<div>
+    {% for order in orders %}
+        {% for gooods in goodses %}
+        <div>
+            <!-- Данные о блюде -->
+        </div>
+        {% endfor %}
+        <!-- Данные о заказе -->
+        <button>Take order</button>
+    {% endfor %}
+</div>
+{% else %}
+<h1>Текущий Заказ</h1>
+<div>
+    {% for gooods in goodses %}
+    <div>
+        <!-- Данные о блюде -->
+    </div>
+    {% endfor %}
+    <!-- Данные о заказе -->
+    <button>order delivered</button>
+</div>
+{% endif %}
+{% endblock %}

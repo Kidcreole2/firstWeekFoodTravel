@@ -1,0 +1,24 @@
+{% extends "base.html" %} {% block content %}
+ <h1>Завести блюдо</h1> 
+ <div>
+    <form>
+        <div>
+            <input type="text" name="title">
+            <label>Название блюда</label>
+        </div>
+        <div>
+            <input type="text" name="photo_URL">
+            <label>Ссылка на фото блюда</label>
+        </div>
+        <div>
+            <input type="text" name="description">
+            <label>Описание блюда</label>
+        </div>
+        <div>
+            <input type="number" name="price">
+            <label>Цена блюда</label>
+        </div>
+        <button>Create</button>
+    </form>
+ </div>
+ {% endblock %}

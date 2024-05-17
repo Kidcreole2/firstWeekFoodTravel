@@ -46,21 +46,25 @@ def create_entity(entity):
                     comment=request.form['comment'],
                     price=request.form['price']
                 )
-                Orders.create(new_order)
+                new_order_id = Orders.create(new_order)
+                for goods in goodses:
+                    new_goods_order = Goods_Orders(
+                        goods_id=goods,
+                        order_id=new_order_id
+                    )
                 return jsonify({"message": "Заказ был успешно создан"}), 200
-            return render_template("pages")
+            return render_template("pages/orders/cart.html")
         case "goods":
             if request.method == "POST":
                 new_goods = Goods(
-                    delivery_address=request.form['delivery_address'],
-                    delivery_date=request.form['delivery_date'],
-                    status=request.form['status'],
-                    comment=request.form['comment'],
-                    price=request.form['price']
+                    title=request.form['title'],
+                    photo_URL=request.form['photo_URL'],
+                    description=request.form['description'],
+                    price=request.form['price'],
                 )
                 Goods.create(new_goods)
                 return jsonify({"message": "Блюдо было успешно создано"}), 200
-            return render_template("pages")
+            return render_template("pages/goods/create.html")
         case "ingridient":
             if request.method == "POST":
                 new_ings = Ingridient(
@@ -69,7 +73,7 @@ def create_entity(entity):
                 )
                 Ingridient.create(new_ings)
                 return jsonify({"message": "Ингридиент был успешно создан"}), 200
-            return render_template("pages")
+            return render_template("pages/goods/ingridients/create.html")
         
 # --status update--
 
@@ -87,7 +91,6 @@ def orders_update_status(order_id):
             )
             Orders.update(old_order,new_order)
             return jsonify({"message": "Заказ был успешно обновлён"}), 200
-        return render_template("pages/opop/group/update.html")
 
 # ==entity update/delete==    
  
@@ -95,24 +98,23 @@ def orders_update_status(order_id):
 @login_required
 def entity_actions(entity,action,entity_id):
     match entity:
-        case "ingridient":
+        case "goods":
             match action:
                 case "update":
                     old_goods = Goods.query.filter_by(id=entity_id).first()
                     if request.method == "POST":
                         new_goods = Goods(
-                            delivery_address=request.form['delivery_address'],
-                            delivery_date=request.form['delivery_date'],
-                            status=request.form['status'],
-                            comment=request.form['comment'],
-                            price=request.form['price']
+                            title=request.form['title'],
+                            photo_URL=request.form['photo_URL'],
+                            description=request.form['description'],
+                            price=request.form['price'],
                         )
                         Goods.update(old_goods,new_goods)
                         return jsonify({"message": "Блюдо было успешно обновлено"}), 200
-                    return render_template("pages/opop/group/update.html")
+                    return render_template("pages/goods/update.html")
                 case "delete":
                     return "Delete"
-        case "goods":
+        case "ingridient":
             match action:
                 case "update":
                     old_ings = Ingridient.query.filter_by(id=entity_id).first()
@@ -123,7 +125,7 @@ def entity_actions(entity,action,entity_id):
                         )
                         Ingridient.update(old_ings,new_ings)
                         return jsonify({"message": "Ингридиент был успешно обновлён"}), 200
-                    return render_template("pages/opop/group/update.html")
+                    return render_template("pages/ingridients/update.html")
                 case "delete":
                     return "Delete"
                 

@@ -1,15 +1,13 @@
 {% extends "base.html" %} {% block content %}
-<h1>Заказы</h1>
+<h1>Заказ</h1>
 <div>
-    {% for order in orders %}
+    <form>
         {% for gooods in goodses %}
         <div>
             <!-- Данные о блюде -->
         </div>
         {% endfor %}
-        <!-- Данные о заказе -->
-        <button>Take order</button>
-    {% endfor %}
+        <button>Confirm order</button>
+    </form>
 </div>
-<!-- Create goods -->
 {% endblock %}
