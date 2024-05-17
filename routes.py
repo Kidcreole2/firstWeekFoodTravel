@@ -77,7 +77,7 @@ def create_entity(entity):
         
 # --status update--
 
-@app.route("/order/update/<order_id>/<order_status>")
+@app.route("/order/update/<order_id>")
 @login_required
 def orders_update_status(order_id):
         old_order = Orders.query.filter_by(id=order_id).first()
