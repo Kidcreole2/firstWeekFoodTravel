@@ -89,7 +89,7 @@ class Goods(UserMixin, db.Model):
     __tablename__ = "goods"
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(20),unique=True,nullable=False)
-    photo_URL = db.Column(db.String(100))
+    photo_URL = db.Column(db.String(250))
     description = db.Column(db.String(300))
     price = db.Column(db.Integer, nullable=False)
     
