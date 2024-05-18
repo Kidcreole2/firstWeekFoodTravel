@@ -2,7 +2,6 @@ from flask_login import UserMixin, login_user
 from flask_sqlalchemy import SQLAlchemy
 from core import app
 import datetime, string, random
-#TODO создание админа
 db = SQLAlchemy(app)
 
 class Users(UserMixin, db.Model):
@@ -20,7 +19,7 @@ class Users(UserMixin, db.Model):
     users_orders = db.relationship("Users_Orders", back_populates="users")
     
     
-    def __init__(self, login: str,phone_number: str, password: str, firstname: str, lastname: str, surname: str, role):
+    def __init__(self, login: str,phone_number: str, password: str, firstname: str, lastname: str, surname: str, role: str):
         self.login = login
         self.password = password
         self.lastname = lastname
@@ -30,7 +29,7 @@ class Users(UserMixin, db.Model):
         self.phone_number = phone_number
     
     @staticmethod
-    def auth_user(login, password) -> str:
+    def auth_user(login, password) -> dict:
         user = Users.query.filter_by(login=login).first()
         print(user)
         if user is not None and user.password == password:
@@ -40,7 +39,7 @@ class Users(UserMixin, db.Model):
             return {"message": "Пользователь с таким логином уже существует придумайте другой", "role": ""}
     
     @staticmethod
-    def create(user):
+    def create(user) -> dict:
         new_user = Users.query.filter_by(login=user.login).first()
         if new_user is None:
             db.session.add(user)
@@ -85,7 +84,7 @@ class Users(UserMixin, db.Model):
                 login = login + random.choice(letters)
         return login
               
-class Goods(UserMixin, db.Model):
+class Goods(db.Model):
     __tablename__ = "goods"
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(20),unique=True,nullable=False)
@@ -126,7 +125,7 @@ class Goods(UserMixin, db.Model):
         Goods.query.filter_by(id=goods_id).delete()
         db.session.commit()
     
-class Orders(UserMixin, db.Model):
+class Orders(db.Model):
     __tablename__ = "orders"
     id = db.Column(db.Integer, primary_key=True)
     delivery_address = db.Column(db.String(50),nullable=False)
@@ -139,7 +138,7 @@ class Orders(UserMixin, db.Model):
     users_orders = db.relationship("Users_Orders", back_populates="orders")
     goods_orders = db.relationship("Goods_Orders", back_populates="orders")
     
-    def __init__(self, delivery_address: str, delivery_date: str, status: str, comment: str, price: int):
+    def __init__(self, delivery_address: str, delivery_date: datetime.datetime, status: str, comment: str, price: int):
         self.delivery_address = delivery_address
         self.delivery_date = delivery_date
         self.status = status
@@ -171,7 +170,7 @@ class Orders(UserMixin, db.Model):
         Orders.query.filter_by(id=order_id).delete()
         db.session.commit()
             
-class Ingridient(UserMixin, db.Model):
+class Ingridient(db.Model):
     __tablename__ = "ingridient"
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(20),nullable=False)
@@ -206,7 +205,7 @@ class Ingridient(UserMixin, db.Model):
         Ingridient.query.filter_by(id=ingridient_id).delete()
         db.session.commit()
     
-class Users_Orders(UserMixin, db.Model):
+class Users_Orders(db.Model):
     __tablename__ = "users_orders"
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
@@ -239,7 +238,7 @@ class Users_Orders(UserMixin, db.Model):
             Users_Orders.query.filter_by(order_id=order.id).delete()
         db.session.commit()
     
-class Goods_Orders(UserMixin, db.Model):
+class Goods_Orders(db.Model):
     __tablename__ = "goods_orders"
     id = db.Column(db.Integer, primary_key=True)
     goods_id = db.Column(db.Integer, db.ForeignKey("goods.id"))

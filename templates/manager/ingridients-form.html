@@ -1,0 +1,42 @@
+{% extends 'base_login.html' %}
+
+{% from 'admin/admin-header.html' import admin_logo %}
+
+{% block styles %}
+    <link rel="stylesheet" href=" {{ url_for('static', filename='css/login.css') }} "/>
+    <link rel="stylesheet" href=" {{ url_for('static', filename='css/manager.css') }} "/>
+{% endblock %}
+
+{% block nav %}
+    <nav class="header__nav">
+        <ul class="nav__ul">
+            <li class="nav__li">
+                <a href="/" class="nav__a">Заказы</a>
+            </li>
+            <li class="nav__li">
+                <span class="nav__a__active">Блюда</span>
+            </li>
+            <li class="nav__li">
+                <a href="#" class="logout nav__a">Выйти</a>
+            </li>
+        </ul>
+    </nav>
+{% endblock %}
+
+{% block logo %}
+    {{ admin_logo() }}
+{% endblock %}
+
+{% block content %}
+    <div class="main__form">
+    <h1>Добавить ингридиенты</h1>
+    <button id="make-field" class="button">Добавить поле ввода</button>
+    <form method="POST">
+        <div class=".form-component">
+            <label for="name_id">Название ингридиента</label>
+            <input id="name_id" name="name" placeholder="Лосось">
+        </div>
+    </form>
+    <button id="send" class="button">Создать</button>
+    </div>
+{% endblock %}

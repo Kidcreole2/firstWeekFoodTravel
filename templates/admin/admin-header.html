@@ -1,0 +1,13 @@
+{% macro admin_logo() %}
+    <img src="{{ url_for('static', filename='img/layer1.svg') }}" alt="logo">
+{% endmacro %}
+
+{% macro admin_nav() %}
+    <nav class="header__nav">
+        <ul class="nav__ul">
+            <li class="nav__li">
+                <a href="#" class="logout nav__a">Выйти</a>
+            </li>
+        </ul>
+    </nav>
+{% endmacro %}

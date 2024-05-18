@@ -1,0 +1,82 @@
+{% extends 'base_login.html' %}
+
+{% from 'admin/admin-header.html' import admin_logo, admin_nav %}
+
+{% block logo %}
+    {{ admin_logo() }}
+{% endblock %}
+
+{% block nav %}
+    {{ admin_nav() }}
+{% endblock %}
+
+{% block content %}
+    <div class="main__form">
+        <h1>Регистрация</h1>
+        <form action="/login" method="post">
+            <div class="form-component">
+                <label for="lastname">Фамилия</label>
+                <input
+                        type="text"
+                        name="lastname"
+                        placeholder="Иванов"
+                        id="lastname"
+                />
+            </div>
+            <div class="form-component">
+                <label for="firstname">Имя</label>
+                <input
+                        type="text"
+                        name="firstname"
+                        placeholder="Иван"
+                        id="firstname"
+                />
+            </div>
+            <div class="form-component">
+                <label for="surname">Отчество</label>
+                <input
+                        type="text"
+                        name="surname"
+                        placeholder="Иванович"
+                        id="surname"
+                />
+            </div>
+            <div class="form-component">
+                <label for="phone">Номер телефона</label>
+                <input
+                        type="tel"
+                        name="phone"
+                        placeholder="+78005553535"
+                        id="phone"
+                />
+            </div>
+            <div class="form-component">
+                <label for="login">Логин</label>
+                <input type="text" name="login" placeholder="Login" id="login"/>
+            </div>
+            <div class="form-component">
+                <label for="password">Пароль</label>
+                <input
+                        type="password"
+                        name="password"
+                        placeholder="....."
+                        id="password"
+                />
+            </div>
+            <div class="form-component">
+                <label for="password-confirm">Подтвердите</label>
+                <input
+                        type="password"
+                        name="password-confirm"
+                        placeholder="....."
+                        id="password-confirm"
+                />
+            </div>
+
+            <div class="form-buttons">
+                <button type="submit">Зарегестрироваться</button>
+                <a class="button" target="" rel="noopener noreferrer">Войти</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}
