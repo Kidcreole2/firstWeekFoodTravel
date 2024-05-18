@@ -1,0 +1,66 @@
+header {
+  position: absolute;
+}
+
+.header__logo img {
+  height: 50px;
+  width: auto;
+}
+header .container {
+  justify-content: center;
+}
+
+.main__form {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 500px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  align-items: center;
+  height: 95vh;
+}
+
+form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-component {
+  width: 100%;
+  max-width: 350px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.form-component input {
+  outline: none;
+  border: none;
+  padding: 10px 20px;
+  border-bottom: 2px solid #b1b1b1;
+  transition: ease-in-out 0.3s;
+}
+
+.form-component input:focus {
+  border-bottom: 2px solid #f78575;
+  transition: ease-in-out 0.3s;
+}
+
+.form-buttons {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+

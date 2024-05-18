@@ -1,0 +1,10 @@
+.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.orders-item {
+    border-bottom: 2px solid #f78575;
+    padding-bottom: 5px;
+}
