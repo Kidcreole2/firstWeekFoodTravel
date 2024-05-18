@@ -1,0 +1,132 @@
+@keyframes buttonHover {
+  from {
+    border: 2px solid #f78575;
+    border-radius: 6px;
+    color: #f78575;
+  }
+
+  to {}
+}
+
+header {
+  width: 100%;
+  padding: 20px 30px;
+  background-color: #fbecdd;
+}
+
+header .container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header__logo img {
+  width: 70px;
+  height: auto;
+}
+
+.header__nav {
+  display: flex;
+  justify-content: end;
+  flex-direction: row;
+  /* justify-content: center; */
+  align-content: center;
+}
+
+header ul {
+  width: 100%;
+  max-width: 300px;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  font-size: 1.5em;
+  color: #f78575;
+  gap: 10px;
+  font-family: "Lato", sans-serif;
+  margin: 0;
+}
+
+nav {
+  width: 100%;
+}
+
+.nav__li i {
+  font-size: 1.4em;
+  cursor: pointer;
+  padding: 5px;
+  position: relative;
+  transition: linear 0.3s;
+}
+
+.cart::after {
+  content: "10";
+  position: absolute;
+  /* display: block; */
+  font-size: 0.4em;
+  background-color: #f78575;
+  color: white;
+  width: 25px;
+  height: 25px;
+  border-radius: 14px;
+  /* left: 5px; */
+  /* bottom: 10px; */
+  z-index: 1000;
+  text-align: center;
+}
+
+.cart:hover::after {
+  display: none;
+  transition: ease-out 0.3s;
+}
+
+.nav__li i:hover {
+  color: white;
+  padding: 5px;
+  /* border: 2px solid #f78575; */
+  background-color: #f78575;
+  border-radius: 6px;
+  transition: linear 0.3s;
+}
+
+.nav__a {
+  border: 2px solid #f78575;
+  border-radius: 6px;
+  color: #f78575;
+  padding: 5px;
+  transition: ease-in-out 0.4s;
+}
+
+.nav__a:hover {
+  border: 2px solid #f78575;
+  background-color: #f78575;
+  color: white;
+  text-decoration: none;
+  animation-fill-mode: forwards;
+  text-decoration: underline;
+  transition: ease-in-out 0.4s;
+}
+
+.nav__a:active {
+  border: 2px solid #f78575;
+  background-color: #f78575;
+  color: white;
+  text-decoration: none;
+  animation-fill-mode: forwards;
+  text-decoration: underline;
+  transition: ease-in-out 0.1s;
+}
+
+.nav__a__active {
+  border: 2px solid #f78575;
+  border-radius: 6px;
+  padding: 5px;
+  background-color: #f78575;
+  color: white;
+  text-decoration: none;
+  animation-fill-mode: forwards;
+  text-decoration: underline;
+  transition: ease-in-out 0.1s;
+}
