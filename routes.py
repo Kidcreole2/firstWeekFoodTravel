@@ -70,13 +70,13 @@ def create_entity(entity):
             return render_template("manager/good-form.html")
 
 
-@app.route('/institute/<goods_id>/create', methods=['GET', 'POST'])
+@app.route('/ingridient/<goods_id>/create', methods=['GET', 'POST'])
 @login_required
-def create_institute(goods_id):
+def create_ingridient(goods_id):
     if request.method == "POST":
         new_ings = Ingridient(title=request.form['title'], goods_id=goods_id)
         Ingridient.create(new_ings)
-        return redirect(f"/goods/update/{goods_id}")
+        return jsonify({"goods_id": goods_id, "message": "Ингридиент был успешно создан"})
     return render_template("manager/ingridients-form.html")
 
 # --status update--
@@ -109,7 +109,8 @@ def entity_actions(entity, action, entity_id):
                         return redirect('/manager/goods')
                     return render_template("manager/good-form.html", goods=old_goods)
                 case "delete":
-                    return "Delete"
+                    Goods.delete(entity_id)
+                    return jsonify({"message": "Блюдо успешно удалено"}), 200
         case "ingridient":
             match action:
                 case "update":
@@ -117,10 +118,11 @@ def entity_actions(entity, action, entity_id):
                     if request.method == "POST":
                         new_ings = Ingridient(title=request.form['title'], goods_id=old_ings.goods_id)
                         Ingridient.update(old_ings, new_ings)
-                        return (f"/goods/update/{old_ings.goods_id}")
-                    return render_template("pages/ingridients/update.html", ingridients=old_ings)
+                        return redirect(f"/goods/update/{old_ings.goods_id}")
+                    return render_template("manager/ingridients-form.html", ingridient=old_ings)
                 case "delete":
-                    return "Delete"
+                    Ingridient.delete(entity_id)
+                    return jsonify({"message": "Ингредиент успешно удален"}), 200
 
 
 #  ==Users crud==

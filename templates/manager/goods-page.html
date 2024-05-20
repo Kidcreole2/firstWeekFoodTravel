@@ -11,6 +11,10 @@
     {{ admin_logo() }}
 {% endblock %}
 
+{% block script %}
+    <script src="{{ url_for('static', filename='js/manager-goods.js') }}"></script>
+{% endblock %}
+
 {% block nav %}
     <nav class="header__nav">
         <ul class="nav__ul">
@@ -34,14 +38,14 @@
             <a href="/goods/create" class="button">Создать</a>
         </div>
         {% for good in goods %}
-            <div class="row good">
+            <div class="row good" data-good-id="{{ good.id }}">
                 <div class="col"><h4>{{ good.title }}</h4></div>
                 <div class="col"><span class="price">{{ good.price }}</span></div>
                 <div class="col">
                     <a class="button" href="/goods/update/{{ good.id }}">Отредактировать</a>
                 </div>
                 <div class="col">
-                    <button class="button" href="">Удалить</button>
+                    <button class="button delete" id="{{ good.id }}">Удалить</button>
                 </div>
             </div>
         {% endfor %}

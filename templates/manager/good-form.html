@@ -11,6 +11,10 @@
     {{ admin_logo() }}
 {% endblock %}
 
+{% block script %}
+    <script src="{{ url_for('static', filename='js/good-form.js') }}"></script>
+{% endblock %}
+
 {% block nav %}
     <nav class="header__nav">
         <ul class="nav__ul">
@@ -32,10 +36,11 @@
         <h1>Создать блюдо</h1>
 
         {% if goods %}
-            <a href="/institute/{{ goods.id }}/create">Добавить возможные ингридиенты</a>
+            <a href="/ingridient/{{ goods.id }}/create">Добавить возможные ингридиенты</a>
             <ul>
-                {% for ingridient in goods.ingridients %}
-                    <li data-ingr-id="{{ ingridient.id }}"> {{ ingridient.title }}
+                {% for ingridient in goods.ingridient %}
+                    <li data-ingr-id="{{ ingridient.id }}">
+                        <a href="/ingridient/update/{{ ingridient.id }}">{{ ingridient.title }}</a>
                         <button id="{{ ingridient.id }}" class="button delete">Удалить</button>
                     </li>
                 {% endfor %}
