@@ -16,21 +16,27 @@
 
 {% block content %}
         <div class="main__form">
-          <h1>Создать аккаунт кухни</h1>
+            {% if kitchen %}
+                <h1>Редактировать аккаунт кухни</h1>
+            {% else %}
+                <h1>Создать аккаунт кухни</h1>
+            {% endif %}
           <form action="" method="post">
             <div class="form-component">
               <label for="login">Логин</label>
-              <input type="text" name="login" placeholder="Login" id="login" />
+              <input type="text" name="login" placeholder="Login" id="login" value="{% if kitchen.login %}{{ kitchen.login }}{% endif %}" />
             </div>
             <div class="form-component">
               <label for="password">Пароль</label>
               <input
-                type="password"
+                type="{% if kitchen %}text{% else %}password{% endif %}"
                 name="password"
                 placeholder="....."
                 id="password"
+                value="{% if kitchen %}{{ kitchen.password }}{% endif %}"
               />
             </div>
+            {% if not kitchen %}
             <div class="form-component">
               <label for="password-confirm">Подтвердите пароль</label>
               <input
@@ -43,6 +49,9 @@
             <div class="form-buttons">
               <button class="button" type="submit">Создать</button>
             </div>
+          {% else %}
+                <button class="button" type="submit">Сохранить</button>
+          {% endif %}
           </form>
         </div>
 {% endblock %}

@@ -35,9 +35,9 @@
             <a href="#">Добавить возможные ингридиенты</a>
             <ul>
                 {% for ingridient in goods.ingridients %}
-                <li data-ingr-id="{{ ingridient.id }}"> {{ ingridient.title }}
-                    <button id="{{ ingridient.id }}" class="button delete">Удалить</button>
-                </li>
+                    <li data-ingr-id="{{ ingridient.id }}"> {{ ingridient.title }}
+                        <button id="{{ ingridient.id }}" class="button delete">Удалить</button>
+                    </li>
                 {% endfor %}
             </ul>
         {% endif %}
@@ -50,12 +50,14 @@
 
             <div class="form-component">
                 <label for="image-url">Ссылка изображение</label>
-                <input type="url" id="image-url" name="image-url" value="{% if goods %}{{ goods.photo_URL }}{% endif %}"/>
+                <input type="url" id="image-url" name="image-url"
+                       value="{% if goods %}{{ goods.photo_URL }}{% endif %}"/>
             </div>
 
             <div class="form-component">
                 <label for="description">Описание блюда</label>
-                <input type="text" id="description" name="description" value="{% if goods %}{{ goods.description }}{% endif %}"/>
+                <input type="text" id="description" name="description"
+                       value="{% if goods %}{{ goods.description }}{% endif %}"/>
             </div>
 
             <div class="form-component">

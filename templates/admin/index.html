@@ -3,68 +3,86 @@
 {% from 'admin/admin-header.html' import admin_nav, admin_logo %}
 
 {% block styles %}
-	<link rel="stylesheet" href="{{ url_for('static', filename='css/manager.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/manager.css') }}">
 {% endblock %}
 
 {% block logo %}
-	{{ admin_logo }}
+    {{ admin_logo }}
 {% endblock %}
 
 {% block nav %}
-	{{ admin_nav() }}
+    {{ admin_nav() }}
 {% endblock %}
 
 {% block script %}
-    <script src="{{ url_for('static', 'js/admin-index.js') }}" ></script>
+    <script src="{{ url_for('static', 'js/admin-index.js') }}"></script>
 {% endblock %}
 
 {% block content %}
-       <div class="users-list">
-          <div class="goods">
+    <div class="users-list">
+        <div class="goods">
             <div class="goods-head">
-              <h2>Менеджеры</h2>
-              <button class="button">Создать</button>
+                <h2>Менеджеры</h2>
+                <button class="button">Создать</button>
             </div>
-            <div class="row good">
-              <div class="col"><h4>Алексеев Алексей Алексеевич</h4></div>
-              <div class="col">
-                <a class="button" href="">Отредактировать</a>
-              </div>
-              <div class="col">
-                <button class="button" href="">Удалить</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="goods">
-            <div class="goods-head">
-              <h2>Курьеры</h2>
-              <button class="button">Создать</button>
-            </div>
-            <div class="row good">
-              <div class="col"><h4>Петров Петр Петрович</h4></div>
-              <div class="col">
-                <a class="button" href="">Отредактировать</a>
-              </div>
-              <div class="col">
-                <button class="button" href="">Удалить</button>
-              </div>
-            </div>
-          </div>
-          <div class="goods">
-            <div class="goods-head">
-              <h2>Пользователи</h2>
-              <button class="button">Создать</button>
-            </div>
-            <div class="row good">
-              <div class="col"><h4>Иванов Иван Иванович</h4></div>
-              <div class="col">
-                <a class="button" href="">Отредактировать</a>
-              </div>
-              <div class="col">
-                <button class="button" href="">Удалить</button>
-              </div>
-            </div>
-          </div>
+            {% for manager in managers %}
+                <div class="row good">
+                    <div class="col">
+                        <h4>
+                            {{ manager.lastname }}
+                            {{ manager.firstname }}
+                            {{ manager.surname }}
+                        </h4>
+                    </div>
+                    <div class="col">
+                        <a class="button" href="">Отредактировать</a>
+                    </div>
+                    <div class="col">
+                        <a class="button" href="">Удалить</a>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
+
+        <div class="goods">
+            <div class="goods-head">
+                <h2>Курьеры</h2>
+                <a href="" class="button">Создать</a>
+            </div>
+            {% for courier in couriers %}
+                <div class="row good">
+                    <div class="col">
+                        <h4>
+                            {{ courier.lastname }}
+                            {{ courier.firstname }}
+                            {{ courier.surname }}
+                        </h4>
+                    </div>
+                    <div class="col">
+                        <a class="button" href="">Отредактировать</a>
+                    </div>
+                    <div class="col">
+                        <button class="button" href="">Удалить</button>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="goods">
+            <div class="goods-head">
+                <h2>Кухни</h2>
+                <a href="" class="button">Создать</a>
+            </div>
+            {% for kitchen in kitchens %}
+                <div class="row good">
+                    <div class="col"><h4>{{ kitchen.login }}</h4></div>
+                    <div class="col">
+                        <a class="button" href="">Отредактировать</a>
+                    </div>
+                    <div class="col">
+                        <button class="button" href="">Удалить</button>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}

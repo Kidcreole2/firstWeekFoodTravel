@@ -15,7 +15,7 @@
     <nav class="header__nav">
         <ul class="nav__ul">
             <li class="nav__li">
-                <a href="/" class="nav__a" >Заказы</a>
+                <a href="/" class="nav__a">Заказы</a>
             </li>
             <li class="nav__li">
                 <span class="nav__a__active">Блюда</span>
@@ -28,22 +28,22 @@
 {% endblock %}
 
 {% block content %}
-        <div class="goods">
-          <div class="goods-head">
+    <div class="goods">
+        <div class="goods-head">
             <h2>Блюда</h2>
             <a class="button">Создать</a>
-          </div>
-            {% for good in goods %}
-          <div class="row good">
-            <div class="col"><h4>{{ good.title }}</h4></div>
-            <div class="col"><span class="price">{{ good.price }}</span></div>
-            <div class="col">
-              <a class="button" href="">Отредактировать</a>
-            </div>
-            <div class="col">
-              <button class="button" href="">Удалить</button>
-            </div>
-          </div>
-            {% endfor %}
         </div>
+        {% for good in goods %}
+            <div class="row good">
+                <div class="col"><h4>{{ good.title }}</h4></div>
+                <div class="col"><span class="price">{{ good.price }}</span></div>
+                <div class="col">
+                    <a class="button" href="">Отредактировать</a>
+                </div>
+                <div class="col">
+                    <button class="button" href="">Удалить</button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

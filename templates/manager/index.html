@@ -15,7 +15,7 @@
     <nav class="header__nav">
         <ul class="nav__ul">
             <li class="nav__li">
-                <span class="nav__a__active" >Заказы</span>
+                <span class="nav__a__active">Заказы</span>
             </li>
             <li class="nav__li">
                 <a href="/manager" class="nav__a">Блюда</a>
@@ -28,38 +28,41 @@
 {% endblock %}
 
 {% block content %}
-        <div class="orders">
-          <h2>Необработанные заказы</h2>
-            {% for order in  %}
-          <div class="order">
-            <h3>Заказ №305</h3>
-
-            <div class="user-phone">
-              <span class="info">Номер клиента:</span>
-              <a href="tel:+78005553535">88005553535</a>
-            </div>
-
-            <div class="order-info">
-              <div class="order-composition">
-                <div class="order-name">
-                  <span class="info">Заказ:</span><span> Филадельфия</span>
+    <div class="orders">
+        <h2>Необработанные заказы</h2>
+        {% for order in inactive_orders %}
+            <div class="order">
+                <h3>Заказ №{{ order.id }}</h3>
+                {% for user in order.users_orders %}
+                    {% if user.users.role == "client" %}
+                        <div class="user-phone">
+                            <span class="info">Номер клиента:</span>
+                            <a href="tel:{{ user.users.phone_number }}">{{ user.users.phone_number }}</a>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <div class="order-info">
+                    {% for goods in order.goods_orders %}
+                        <div class="order-composition">
+                            <div class="order-name">
+                                <span class="info">Заказ:</span><span> {{ goods.goods.title }}</span>
+                            </div>
+                            <div class="order-additional">
+                                <span class="info">Дополнения:</span>
+                                <ul class="additional-list">
+                                    {% for ingridient in goods.ingridient_orders %}
+                                        <li>{{ ingridient.ingridient.title }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    {% endfor %}
                 </div>
 
-                <div class="order-additional">
-                  <span class="info">Дополнения:</span>
-                  <ul class="additional-list">
-                    <li>Хуй</li>
-                    <li>Большой</li>
-                    <li>И</li>
-                    <li>Черный</li>
-                  </ul>
+                <div class="order-upworked">
+                    <button class="button">Отправить заказ на кухню</button>
                 </div>
-              </div>
             </div>
-
-            <div class="order-upworked">
-              <button class="button">Отправить заказ на кухню</button>
-            </div>
-          </div>
-        </div>
+        {% endfor %}
+    </div>
 {% endblock %}
