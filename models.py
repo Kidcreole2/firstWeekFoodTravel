@@ -128,7 +128,8 @@ class Goods(db.Model):
 class Orders(db.Model):
     __tablename__ = "order"
     id = db.Column(db.Integer, primary_key=True)
-    delivery_address = db.Column(db.String(50),nullable=False)
+    delivery_from_address = db.Column(db.String(50),nullable=False)
+    delivery_to_address = db.Column(db.String(50),nullable=False)
     delivery_date = db.Column(db.DateTime, nullable=False)
     status = db.Column(db.String(20), nullable=False)
     comment = db.Column(db.String(300))
@@ -138,8 +139,9 @@ class Orders(db.Model):
     users_orders = db.relationship("Users_Orders", back_populates="orders", cascade="all, delete")
     goods_orders = db.relationship("Goods_Orders", back_populates="orders", cascade="all, delete")
     
-    def __init__(self, delivery_address: str, delivery_date: datetime.datetime, status: str, comment: str, price: int):
-        self.delivery_address = delivery_address
+    def __init__(self, delivery_from_address: str,delivery_to_address: str, delivery_date: datetime.datetime, status: str, comment: str, price: int):
+        self.delivery_from_address = delivery_from_address
+        self.delivery_to_address = delivery_to_address
         self.delivery_date = delivery_date
         self.status = status
         self.comment = comment
@@ -158,7 +160,8 @@ class Orders(db.Model):
     @staticmethod
     def update(old_order, new_order):
         old_order = Orders.query.filter_by(id=old_order.id).first()
-        old_order.delivery_address = new_order.delivery_address
+        old_order.delivery_from_address = new_order.delivery_from_address
+        old_order.delivery_to_address = new_order.delivery_to_address
         old_order.delivery_date = new_order.delivery_date
         old_order.status = new_order.status
         old_order.comment = new_order.comment
