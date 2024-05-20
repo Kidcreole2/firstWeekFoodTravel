@@ -177,6 +177,7 @@ class Ingridient(db.Model):
     goods_id = db.Column(db.Integer, db.ForeignKey("goods.id"))
     
     # связи
+    ingridient_orders = db.relationship("Ingridient_Orders", back_populates="ingridient", cascade="all, delete")
     goods = db.relationship("Goods", back_populates="ingridient")
     
     def __init__(self, title: str, goods_id: int):
@@ -247,6 +248,7 @@ class Goods_Orders(db.Model):
     # связи
     goods = db.relationship("Goods", back_populates="goods_orders")
     order = db.relationship("Order", back_populates="goods_orders")
+    ingridient_orders = db.relationship("Ingridient_Orders", back_populates="goods_orders", cascade="all, delete")
     
     def __init__(self, goods_id: int, order_id: int):
         self.goods_id = goods_id
@@ -270,6 +272,26 @@ class Goods_Orders(db.Model):
         for order in orders:
             Goods_Orders.query.filter_by(order_id=order.id).delete()
         db.session.commit()
+
+class Ingridient_Orders(db.Model):
+    __tablename__ = "ingridient_orders"
+    id = db.Column(db.Integer, primary_key=True)
+    ingridient_id = db.Column(db.Integer, db.ForeignKey("goods.id"))
+    goods_orders_id = db.Column(db.Integer, db.ForeignKey("goods_orders.id"))
+
+    # связи
+    goods_orders = db.relationship("Goods_Orders", back_populates="ingridient_orders")
+    ingridient = db.relationship("Ingridient", back_populates="ingridient_orders")
+    
+    def __init__(self, goods_id: int, order_id: int):
+        self.goods_id = goods_id
+        self.order_id = order_id
+        
+    @staticmethod
+    def create(goods_orders):
+            db.session.add(goods_orders)
+            db.session.commit()
+        
 
 with app.app_context():
     db.create_all()
