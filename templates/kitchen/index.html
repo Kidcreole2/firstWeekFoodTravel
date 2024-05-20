@@ -3,7 +3,7 @@
 {% from 'admin/admin-header.html' import admin_logo, admin_nav %}
 
 {% block styles %}
-    <link rel="stylesheet" href="{{ url_for('static', 'css/kitchen.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', 'css/kitchen.css') }}"/>
 {% endblock %}
 
 {% block logo %}
@@ -11,89 +11,47 @@
 {% endblock %}
 
 {% block nav %}
-	{{ admin_nav() }}
+    {{ admin_nav() }}
 {% endblock %}
 
 {% block content %}
     <div class="orders-group row row-cols-3 justify-content-center">
-      <div class="orders wait-work">
-        <h2>Ожидание</h2>
-        <ul class="orders-list">
-          <li class="orders-item row row-cols-2">
-            <a href="order-data">Заказ №304</a>
-            <input
-              class="button-small"
-              type="button"
-              value="Взять в работу"
-            />
-          </li>
-          <li class="orders-item row row-cols-2">
-            <a href="order-data">Заказ №304</a>
-            <input class="button-small" value="Взять в работу" />
-          </li>
-          <li class="orders-item row row-cols-2">
-            <a href="order-data">Заказ №304</a>
-            <input class="button-small" value="Взять в работу" />
-          </li>
-          <li class="orders-item row row-cols-2">
-            <a href="order-data">Заказ №304</a>
-            <input class="button-small" value="Взять в работу" />
-          </li>
-          <li class="orders-item row row-cols-2">
-            <a href="order-data">Заказ №304</a>
-            <input class="button-small" value="Взять в работу" />
-          </li>
-          <li class="orders-item row row-cols-2">
-            <a href="order-data">Заказ №304</a>
-            <input class="button-small" value="Взять в работу" />
-          </li>
-          <li class="orders-item row row-cols-2">
-            <a href="order-data">Заказ №304</a>
-            <input class="button-small" value="Взять в работу" />
-          </li>
-        </ul>
-      </div>
-      <div class="in-progress">
-        <h2>В работе</h2>
-        <ul class="orders-list">
-          <li class="orders-item row row-cols-2">
-            <a href="order-data">Заказ №304</a>
-            <input class="button-small" value="Приготовлено" />
-          </li>
-          <li class="orders-item row row-cols-2">
-            <a href="order-data">Заказ №304</a>
-            <input class="button-small" value="Приготовлено" />
-          </li>
-          <li class="orders-item row row-cols-2">
-            <a href="order-data">Заказ №304</a>
-            <input class="button-small" value="Приготовлено" />
-          </li>
-          <li class="orders-item row row-cols-2">
-            <a href="order-data">Заказ №304</a>
-            <input class="button-small" value="Приготовлено" />
-          </li>
-          <li class="orders-item row row-cols-2">
-            <a href="order-data">Заказ №304</a>
-            <input class="button-small" value="Приготовлено" />
-          </li>
-        </ul>
-      </div>
-      <div class="wait-courier">
-        <h2>Ожидают курьера</h2>
-        <ul class="orders-list">
-          <li class="orders-item row row-cols-2">
-            <a href="order-data">Заказ №304</a>
-            <input class="button-small" value="Забрано курьером" />
-          </li>
-          <li class="orders-item row row-cols-2">
-            <a href="order-data">Заказ №304</a>
-            <input class="button-small" value="Забрано курьером" />
-          </li>
-          <li class="orders-item row row-cols-2">
-            <a href="order-data">Заказ №304</a>
-            <input class="button-small" value="Забрано курьером" />
-          </li>
-        </ul>
-      </div>
+        <div class="orders wait-work">
+            <h2>Ожидание</h2>
+            <ul class="orders-list">
+                {% for order in orders_wait_kitchen %}
+                    <li class="orders-item row row-cols-2">
+                        <a href="order-data">Заказ №{{ order.id }}</a>
+                        <input
+                                class="button-small"
+                                type="button"
+                                value="Взять в работу"
+                        />
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="in-progress">
+            <h2>В работе</h2>
+            <ul class="orders-list">
+                {% for order in orders_on_kitchen %}
+                    <li class="orders-item row row-cols-2">
+                        <a href="order-data">Заказ №{% order.id %}</a>
+                        <input class="button-small" value="Приготовлено"/>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="wait-courier">
+            <h2>Ожидают курьера</h2>
+            <ul class="orders-list">
+                {% for order in orders_wait_courier %}
+                    <li class="orders-item row row-cols-2">
+                        <a href="order-data">Заказ №{{ order.id }}</a>
+                        <input class="button-small" value="Забрано курьером"/>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
 {% endblock %}

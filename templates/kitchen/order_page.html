@@ -3,11 +3,11 @@
 {% from 'admin/admin-header.html' import admin_logo, admin_nav %}
 
 {% block styles %}
-    <link rel="stylesheet" href="{{ url_for('static', 'css/order-page.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', 'css/order-page.css') }}"/>
 {% endblock %}
 
 {% block logo %}
-	{{ admin_logo }}
+    {{ admin_logo }}
 {% endblock %}
 
 {% block nav %}
@@ -15,36 +15,39 @@
 {% endblock %}
 
 {% block script %}
-	<script src="{{ url_for('static', filename='js/kitchen-order.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/kitchen-order.js') }}"></script>
 {% endblock %}
 
 {% block content %}
-        <a href="/templates/kitchen/index.html">Вернуться</a>
-        <div class="order">
-          <div class="order-number">
-            <h1>Заказ № 304</h1>
-          </div>
-          <div class="order-composition">
+    <a href="/templates/kitchen/index.html">Вернуться</a>
+    <div class="order">
+        <div class="order-number">
+            <h1>Заказ № {{ order.id }}</h1>
+        </div>
+        <div class="order-composition">
             <h3>Состав:</h3>
             <ul class="composition-list">
-              <li class="composition-item">
-                <span>Филадельфия</span>
-                <span>Дополнения</span>
-                <ul>
-                  <li>Лосось</li>
-                  <li>Сливочный сыр</li>
-                  <li>Пиво</li>
-                </ul>
-              </li>
-              <li>
-                Филадельфия
-                <ul>
-                  <li>Лосось</li>
-                  <li>Сливочный сыр</li>
-                  <li>Пиво</li>
-                </ul>
-              </li>
+                {% for goods_order in order.goods_orders %}
+                <li class="composition-item">
+
+                    <span>{{ goods_order.goods.title }}</span>
+                    <span>Дополнения</span>
+                    <ul>
+                        {% for ingridient in goods_order.goods.ingridients %}
+                        <li>{% ingridient.title %}</li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                <li class="composition-item">
+                    <span>Филадельфия</span>
+                    <span>Дополнения</span>
+                    <ul>
+                        <li>Лосось</li>
+                        <li>Сливочный сыр</li>
+                        <li>Пиво</li>
+                    </ul>
+                </li>
             </ul>
-          </div>
         </div>
+    </div>
 {% endblock %}

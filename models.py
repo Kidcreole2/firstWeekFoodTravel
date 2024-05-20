@@ -7,7 +7,7 @@ db = SQLAlchemy(app)
 class Users(UserMixin, db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
-    login = db.Column(db.String(20),unique=True,nullable=False)
+    login = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(20), nullable=False)
     firstname = db.Column(db.String(20))
     lastname = db.Column(db.String(20))
@@ -16,7 +16,7 @@ class Users(UserMixin, db.Model):
     phone_number = db.Column(db.String(20))
 
     # связи
-    users_orders = db.relationship("Users_Orders", back_populates="users")
+    users_orders = db.relationship("Users_Orders", back_populates="users", cascade="all, delete")
     
     
     def __init__(self, login: str,phone_number: str, password: str, firstname: str, lastname: str, surname: str, role: str):
@@ -93,8 +93,8 @@ class Goods(db.Model):
     price = db.Column(db.Integer, nullable=False)
     
     # связи
-    goods_orders = db.relationship("Goods_Orders", back_populates="goods")
-    
+    goods_orders = db.relationship("Goods_Orders", back_populates="goods", cascade="all, delete")
+    ingridients = db.relationship("Ingridient", back_populates="goods", cascade="all, delete")
     def __init__(self, title: str, price: int, photo_URL = "", description = ""):
         self.title = title
         self.photo_URL = photo_URL
@@ -103,13 +103,13 @@ class Goods(db.Model):
         
     @staticmethod
     def create(goods):
-        new_task = Goods.query.filter_by(id=goods.id).first()
-        if new_task is None:
+        new_goods = Goods.query.filter_by(id=goods.id).first()
+        if new_goods is None:
             db.session.add(goods)
             db.session.commit()
             return Goods.query.filter_by(id=goods.id).first().id
         else: 
-            return new_task.id
+            return new_goods.id
         
     @staticmethod
     def update(old_goods, new_goods):
@@ -126,7 +126,7 @@ class Goods(db.Model):
         db.session.commit()
     
 class Orders(db.Model):
-    __tablename__ = "orders"
+    __tablename__ = "order"
     id = db.Column(db.Integer, primary_key=True)
     delivery_address = db.Column(db.String(50),nullable=False)
     delivery_date = db.Column(db.DateTime, nullable=False)
@@ -135,8 +135,8 @@ class Orders(db.Model):
     price = db.Column(db.Integer, nullable=False)
     
     # связи
-    users_orders = db.relationship("Users_Orders", back_populates="orders")
-    goods_orders = db.relationship("Goods_Orders", back_populates="orders")
+    users_orders = db.relationship("Users_Orders", back_populates="orders", cascade="all, delete")
+    goods_orders = db.relationship("Goods_Orders", back_populates="orders", cascade="all, delete")
     
     def __init__(self, delivery_address: str, delivery_date: datetime.datetime, status: str, comment: str, price: int):
         self.delivery_address = delivery_address
@@ -147,13 +147,13 @@ class Orders(db.Model):
         
     @staticmethod
     def create(order):
-        new_task = Orders.query.filter_by(id=order.id).first()
-        if new_task is None:
+        new_order = Orders.query.filter_by(id=order.id).first()
+        if new_order is None:
             db.session.add(order)
             db.session.commit()
             return Orders.query.filter_by(id=order.id).first().id
         else: 
-            return new_task.id
+            return new_order.id
         
     @staticmethod
     def update(old_order, new_order):
@@ -208,7 +208,7 @@ class Ingridient(db.Model):
 class Users_Orders(db.Model):
     __tablename__ = "users_orders"
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     order_id = db.Column(db.Integer, db.ForeignKey("order.id"))
 
     # связи
@@ -270,3 +270,6 @@ class Goods_Orders(db.Model):
         for order in orders:
             Goods_Orders.query.filter_by(order_id=order.id).delete()
         db.session.commit()
+
+with app.app_context():
+    db.create_all()

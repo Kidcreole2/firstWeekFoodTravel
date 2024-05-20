@@ -17,10 +17,14 @@
     </nav>
 {% endblock %}
 
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/good-cards.css') }}" >
+{% endblock %}
+
 {% block content %}
     <div class="good-cards">
     {% for good in goods %}
-        <div class="good-card">
+        <div id="{{ good.id }}" class="good-card">
             <div class="good-card-image">
                 <img src="{{ good.photo_URL }}" alt="Филадельфия"/>
             </div>
