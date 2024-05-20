@@ -203,7 +203,7 @@ def user_update(user_id):
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for("/login"))
+    return redirect("/login")
 
 
 # --login function--
@@ -217,7 +217,7 @@ def sign_up():
             surname=request.form["surname"],
             login=request.form["login"],
             password=request.form["password"],
-            role="client",
+            role="admin",
             phone_number=request.form["phone"])
         pprint.pprint(User.create(user))
         return redirect("/")
