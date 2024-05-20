@@ -124,6 +124,12 @@ def entity_actions(entity, action, entity_id):
                     Ingridient.delete(entity_id)
                     return jsonify({"message": "Ингредиент успешно удален"}), 200
 
+@app.route("/user/cart_element/<goods_id>", methods=['POST'])
+@login_required
+def user_cart_element(goods_id):
+    goods = Goods.query.filter_by(id=goods_id).first()
+    return render_template("cart-element.html", goods=goods)
+
 
 #  ==Users crud==
 

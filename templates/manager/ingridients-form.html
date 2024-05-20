@@ -46,12 +46,14 @@
                     <input id="title" name="title" value="{% if ingridient %}{{ ingridient.title }}{% endif %}"
                            placeholder="Лосось">
                 </div>
+
+                {% if ingridient %}
+                <button id="send1" class="button">Сохранить</button>
+                {% endif %}
             </form>
         </div>
         {% if not ingridient %}
             <button id="send" class="button">Создать</button>
-        {% else %}
-            <button id="send1" class="button">Сохранить</button>
         {% endif %}
     </div>
 {% endblock %}

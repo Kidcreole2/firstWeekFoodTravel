@@ -9,7 +9,20 @@
 {% block nav %}
     <nav class="header__nav">
         <ul class="nav__ul">
-            <li class="nav__li"><i class="cart bi bi-cart4"></i></li>
+            <li class="nav__li cart">
+                <i class="bi bi-cart4"></i>
+                <div class="cart-contains">
+                    <div id="goods_1" class="cart-element row row-cols-2">
+                        <div class="col-5">
+                            <h4 class="cart-title">123 </h4>
+                            <p class="cart-info"><span class="info">Цена:</span> 123</p>
+                        </div>
+                        <div class="col-1">
+                            <button class="button"><i class="bi bi-trash-fill"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </li>
             <li class="nav__li">
                 <a href="#" class="logout nav__a">Выйти</a>
             </li>
@@ -18,25 +31,25 @@
 {% endblock %}
 
 {% block styles %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/good-cards.css') }}" >
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/good-cards.css') }}">
 {% endblock %}
 
 {% block content %}
     <div class="good-cards">
-    {% for good in goods %}
-        <div id="{{ good.id }}" class="good-card">
-            <div class="good-card-image">
-                <img src="{{ good.photo_URL }}" alt="Филадельфия"/>
-            </div>
-            <div class="good-card-description">
-                <div class="name">
-                    <h1>{{ good.title }}</h1>
+        {% for good in goods %}
+            <div id="{{ good.id }}" class="good-card">
+                <div class="good-card-image">
+                    <img src="{{ good.photo_URL }}" alt="Филадельфия"/>
                 </div>
+                <div class="good-card-description">
+                    <div class="name">
+                        <h1>{{ good.title }}</h1>
+                    </div>
 
-                <div class="price">{{ good.price }}</div>
+                    <div class="price">{{ good.price }}</div>
+                </div>
             </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
     </div>
 {% endblock %}
 
