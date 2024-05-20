@@ -1,3 +1,5 @@
+import pprint
+
 from flask import request, render_template, redirect, url_for, flash, get_flashed_messages, jsonify
 from flask_login import logout_user, current_user, login_required
 from core import app, login_manager
@@ -33,7 +35,7 @@ def index(role):
             managers = User.query.filter(User.role == "manager").all()
             couriers = User.query.filter(User.role == "courier").all()
             kitchen = User.query.filter(User.role == "kitchen").all()
-            return render_template("admin/index.html", managers=managers, couriers=couriers, kitchen=kitchen)
+            return render_template("admin/index.html", managers=managers, couriers=couriers, kitchens=kitchen)
 
 
 # ==crud==
@@ -122,44 +124,41 @@ def user_create(role):
     match role:
         case "courier":
             if request.method == "POST":
-                name = request.form["fio"].split(" ")
                 user = User(
                     lastname=request.form["lastname"],
                     firstname=request.form["firstname"],
                     surname=request.form["surname"],
                     login=request.form["login"],
                     password=request.form["password"],
-                    role="client",
-                    phone_number=request.form["phone_number"]
+                    role="courier",
+                    phone_number=request.form["phone"]
                     )
                 User.create(user)
-                return jsonify({"message": "Пользователь был успешно создан"})
+                return redirect("/index/admin")
 
-            return render_template("pages")
+            return render_template("admin/stuff-form.html", role=role)
         case "kitchen":
             if request.method == "POST":
-                user = User(lastname="", firstname="", surname="", login=request.form["login"],
-                             password=request.form["password"], role="kitchen")
+                user = User(lastname="1", firstname="1", surname="1", login=request.form["login"],
+                             password=request.form["password"], role="kitchen", phone_number="1")
                 User.create(user)
-                return jsonify({"message": "Пользователь был успешно создан"})
+                return redirect("/index/admin")
 
-            return render_template("pages")
+            return render_template("admin/kitchen-form.html", role=role)
         case "manager":
             if request.method == "POST":
-                name = request.form["fio"].split(" ")
                 user = User(
                     lastname=request.form["lastname"],
                     firstname=request.form["firstname"],
                     surname=request.form["surname"],
                     login=request.form["login"],
                     password=request.form["password"],
-                    role="client",
-                    phone_number=request.form["phone_number"]
+                    role="manager",
+                    phone_number=request.form["phone"]
                     )
                 User.create(user)
-                return jsonify({"message": "Пользователь был успешно создан"})
-
-            return render_template("pages")
+                return redirect("/index/admin")
+            return render_template("admin/stuff-form.html", role=role)
 
 
 @app.route("/admin/user/update/<user_id>", methods=["GET", "POST"])
@@ -167,24 +166,35 @@ def user_create(role):
 def user_update(user_id):
     old_user = User.query.filter_by(id=user_id).first()
     if request.method == "POST":
-        name = request.form["fio"].split()
-        role = request.form["role"]
-
-        new_user = User(
-            lastname=request.form["lastname"],
-            firstname=request.form["firstname"],
-            surname=request.form["surname"],
-            login=request.form["login"],
-            password=request.form["password"],
-            role="client",
-            phone_number=request.form["phone_number"]
+        if old_user.role == "kitchen":
+            new_user = User(
+                lastname=old_user.lastname,
+                firstname=old_user.firstname,
+                surname=old_user.surname,
+                login=request.form["login"],
+                password=request.form["password"],
+                role=old_user.role,
+                phone_number=old_user.phone_number
             )
 
-        User.update(old_user_id=user_id, new_user=new_user)
-        return jsonify({"message": "Данные успешно обновлены"})
+            User.update(old_user_id=user_id, new_user=new_user)
+        else:
+            new_user = User(
+                lastname=request.form["lastname"],
+                firstname=request.form["firstname"],
+                surname=request.form["surname"],
+                login=request.form["login"],
+                password=request.form["password"],
+                role=old_user.role,
+                phone_number=request.form["phone"]
+                )
 
-    return render_template("admin/stuff-form.html", old_user=old_user)
-
+            User.update(old_user_id=user_id, new_user=new_user)
+        return redirect('/index/admin')
+    if old_user.role == "kitchen":
+        return render_template("admin/kitchen-form.html", kitchen=old_user)
+    else:
+        return render_template("admin/stuff-form.html", old_user=old_user)
 
 # ==Basic functions==
 
@@ -198,7 +208,7 @@ def logout():
 
 # --login function--
 
-app.route("/registration", methods=["GET", "POST"])
+@app.route("/registration", methods=["GET", "POST"])
 def sign_up():
     if request.method == "POST":
         user = User(
@@ -208,11 +218,10 @@ def sign_up():
             login=request.form["login"],
             password=request.form["password"],
             role="client",
-            phone_number=request.form["phone_number"])
-        User.create(user)
-        return jsonify({"message": "Пользователь был успешно создан"})
-
-    return render_template("pages")
+            phone_number=request.form["phone"])
+        pprint.pprint(User.create(user))
+        return redirect("/")
+    return render_template("registrate.html")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -221,8 +230,8 @@ def login():
         login = request.form["login"]
         print(login)
         password = request.form.get("password")
-        roles = User.auth_user(login, password)["role"]
-        roles = roles.split
+        roles = User.auth_user(login, password)
+        pprint.pprint(roles)
         return redirect("/")
     return render_template("login.html")
 
@@ -237,7 +246,8 @@ def home():
                 return redirect("/index/courier")
             case "manager":
                 return redirect("/index/manager")
-
+            case "admin":
+                return redirect("/index/admin")
         goods = Goods.query.order_by(Goods.title).all()
         return render_template("index.html", goods=goods)
     else:

@@ -2,6 +2,10 @@
 
 {% from 'admin/admin-header.html' import admin_logo, admin_nav %}
 
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+{% endblock %}
+
 {% block logo %}
     {{ admin_logo() }}
 {% endblock %}
@@ -12,8 +16,13 @@
 
 {% block content %}
     <div class="main__form">
-        <h1>Регистрация</h1>
-        <form action="/login" method="post">
+        {% if old_user %}
+            <h1>Обновить аккаунт персонала</h1>
+            <form action="/admin/user/update/{{ old_user.id }}" method="post">
+        {% else %}
+            <h1>Регистрация</h1>
+            <form action="/admin/user/create/{{ role }}" method="post">
+        {% endif %}
             <div class="form-component">
                 <label for="lastname">Фамилия</label>
                 <input
@@ -21,7 +30,7 @@
                         name="lastname"
                         placeholder="Иванов"
                         id="lastname"
-                        value="{% if old_user.lastname %}{{ old_user.lastname }}{% endif %}"
+                        value="{% if old_user %}{{ old_user.lastname }}{% endif %}"
                 />
             </div>
             <div class="form-component">
@@ -31,7 +40,7 @@
                         name="firstname"
                         placeholder="Иван"
                         id="firstname"
-                        value="{% if old_user.firstname %}{{ old_user.firstname }}{% endif %}"
+                        value="{% if old_user %}{{ old_user.firstname }}{% endif %}"
                 />
             </div>
             <div class="form-component">
@@ -41,7 +50,7 @@
                         name="surname"
                         placeholder="Иванович"
                         id="surname"
-                        {% if old_user.surname %}{{ old_user.surname }}{% endif %}
+                        value="{% if old_user %}{{ old_user.surname }}{% endif %}"
                 />
             </div>
             <div class="form-component">
@@ -51,7 +60,7 @@
                         name="phone"
                         placeholder="+78005553535"
                         id="phone"
-                        value="{% if old_user.phone %}{% old_user.phone %}{% endif %}"
+                        value="{% if old_user %}{{ old_user.phone_number }}{% endif %}"
                 />
             </div>
             <div class="form-component">
@@ -61,36 +70,36 @@
                         name="login"
                         placeholder="Login"
                         id="login"
-                        value="{% if old_user.login %}{{ old_user.login }}{% endif %}"
+                        value="{% if old_user %}{{ old_user.login }}{% endif %}"
                 />
             </div>
             <div class="form-component">
                 <label for="password">Пароль</label>
                 <input
-                        type="text"
+                        type="{% if old_user %}text{% else %}password{% endif %}"
                         name="password"
                         placeholder="....."
                         id="password"
-                        value="{% if old_user.password %}{{ password }}{% endif %}"
+                        value="{% if old_user %}{{ old_user.password }}{% endif %}"
                 />
             </div>
             {% if not old_user %}
-            <div class="form-component">
-                <label for="password-confirm">Подтвердите</label>
-                <input
-                        type="password"
-                        name="password-confirm"
-                        placeholder="....."
-                        id="password-confirm"
-                />
-            </div>
+                <div class="form-component">
+                    <label for="password-confirm">Подтвердите</label>
+                    <input
+                            type="password"
+                            name="password-confirm"
+                            placeholder="....."
+                            id="password-confirm"
+                    />
+                </div>
 
-            <div class="form-buttons">
-                <button type="submit">Создать работника</button>
-            </div>
+                <div class="form-buttons">
+                    <button class="button" type="submit">Создать работника</button>
+                </div>
             {% else %}
                 <div class="form-buttons">
-                    <button type="submit">Сохранить</button>
+                    <button class="button" type="submit">Сохранить</button>
                 </div>
             {% endif %}
 

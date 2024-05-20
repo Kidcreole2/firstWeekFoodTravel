@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block logo %}
-    {{ admin_logo }}
+    {{ admin_logo() }}
 {% endblock %}
 
 {% block nav %}
@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block script %}
-    <script src="{{ url_for('static', 'js/admin-index.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/admin-index.js') }}"></script>
 {% endblock %}
 
 {% block content %}
@@ -23,7 +23,7 @@
         <div class="goods">
             <div class="goods-head">
                 <h2>Менеджеры</h2>
-                <button class="button">Создать</button>
+                <a href="/admin/user/create/manager" class="button">Создать</a>
             </div>
             {% for manager in managers %}
                 <div class="row good">
@@ -35,10 +35,7 @@
                         </h4>
                     </div>
                     <div class="col">
-                        <a class="button" href="">Отредактировать</a>
-                    </div>
-                    <div class="col">
-                        <a class="button" href="">Удалить</a>
+                        <a class="button" href="/admin/user/update/{{ manager.id }}">Отредактировать</a>
                     </div>
                 </div>
             {% endfor %}
@@ -47,7 +44,7 @@
         <div class="goods">
             <div class="goods-head">
                 <h2>Курьеры</h2>
-                <a href="" class="button">Создать</a>
+                <a href="/admin/user/create/courier" class="button">Создать</a>
             </div>
             {% for courier in couriers %}
                 <div class="row good">
@@ -59,10 +56,7 @@
                         </h4>
                     </div>
                     <div class="col">
-                        <a class="button" href="">Отредактировать</a>
-                    </div>
-                    <div class="col">
-                        <button class="button" href="">Удалить</button>
+                        <a class="button" href="/admin/user/update/{{ courier.id }}">Отредактировать</a>
                     </div>
                 </div>
             {% endfor %}
@@ -70,16 +64,13 @@
         <div class="goods">
             <div class="goods-head">
                 <h2>Кухни</h2>
-                <a href="" class="button">Создать</a>
+                <a href="/admin/user/create/kitchen" class="button">Создать</a>
             </div>
             {% for kitchen in kitchens %}
                 <div class="row good">
                     <div class="col"><h4>{{ kitchen.login }}</h4></div>
                     <div class="col">
-                        <a class="button" href="">Отредактировать</a>
-                    </div>
-                    <div class="col">
-                        <button class="button" href="">Удалить</button>
+                        <a class="button" href="/admin/user/update/{{ kitchen.id }}">Отредактировать</a>
                     </div>
                 </div>
             {% endfor %}
