@@ -31,37 +31,42 @@
     <div class="main__form">
         <h1>Создать блюдо</h1>
 
-        {% if edit %}
+        {% if goods %}
             <a href="#">Добавить возможные ингридиенты</a>
             <ul>
-                <li data-ingr-id="2">Лосось
-                    <button id="2" class="button delete">Удалить</button>
+                {% for ingridient in goods.ingridients %}
+                <li data-ingr-id="{{ ingridient.id }}"> {{ ingridient.title }}
+                    <button id="{{ ingridient.id }}" class="button delete">Удалить</button>
                 </li>
+                {% endfor %}
             </ul>
         {% endif %}
 
         <form method="POST" action="">
             <div class="form-component">
                 <label for="title">Название</label>
-                <input type="text" id="title" name="title" value=""/>
+                <input type="text" id="title" name="title" value="{% if goods %}{{ goods.title }}{% endif %}"/>
             </div>
 
             <div class="form-component">
                 <label for="image-url">Ссылка изображение</label>
-                <input type="text" id="image-url" name="image-url" value=""/>
+                <input type="url" id="image-url" name="image-url" value="{% if goods %}{{ goods.photo_URL }}{% endif %}"/>
             </div>
 
             <div class="form-component">
                 <label for="description">Описание блюда</label>
-                <input type="text" id="description" name="description" value=""/>
+                <input type="text" id="description" name="description" value="{% if goods %}{{ goods.description }}{% endif %}"/>
             </div>
 
             <div class="form-component">
                 <label for="price">Цена</label>
-                <input type="number" id="price" name="price" value=""/>
+                <input type="number" id="price" name="price" value="{% if goods %}{{ goods.price }}{% endif %}"/>
             </div>
-
-            <button class="button" type="submit">Создать</button>
+            {% if goods %}
+                <button class="button" type="submit">Обновить</button>
+            {% else %}
+                <button class="button" type="submit">Создать</button>
+            {% endif %}
         </form>
     </div>
 {% endblock %}
