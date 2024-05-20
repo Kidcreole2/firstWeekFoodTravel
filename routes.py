@@ -29,20 +29,24 @@ def index(role):
                                                       User_Order.users.has(User.status == "on the way")).all()
             return render_template("courier/index.html", orders=orders, activer_orders=active_orders)
         case "manager":
-            goodses = Goods.query.all()
-            return render_template("manager/index.html", goodses=goodses)
+            orders_in_processing = Order.query.filter(Order.status == "in processing").all()
+            return render_template("manager/index.html", orders_in_processing=orders_in_processing)
         case "admin":
             managers = User.query.filter(User.role == "manager").all()
             couriers = User.query.filter(User.role == "courier").all()
             kitchen = User.query.filter(User.role == "kitchen").all()
             return render_template("admin/index.html", managers=managers, couriers=couriers, kitchens=kitchen)
 
-
+@app.route('/manager/goods', methods=['GET'])
+@login_required
+def manager_goods():
+    goods = Goods.query.all()
+    return render_template('manager/goods-page.html', goods=goods)
 # ==crud==
 
 # --Create entity--
 
-@app.route("/<entity>/create")
+@app.route("/<entity>/create", methods=['GET', 'POST'])
 @login_required
 def create_entity(entity):
     match entity:
@@ -59,18 +63,21 @@ def create_entity(entity):
             return render_template("pages/orders/cart.html")
         case "goods":
             if request.method == "POST":
-                new_goods = Goods(title=request.form['title'], photo_URL=request.form['photo_URL'],
+                new_goods = Goods(title=request.form['title'], photo_URL=request.form['image-url'],
                     description=request.form['description'], price=request.form['price'], )
                 Goods.create(new_goods)
-                return jsonify({"message": "Блюдо было успешно создано"}), 200
-            return render_template("pages/goods/create.html")
-        case "ingridient":
-            if request.method == "POST":
-                new_ings = Ingridient(title=request.form['title'], goods_id=request.form['goods_id'])
-                Ingridient.create(new_ings)
-                return jsonify({"message": "Ингридиент был успешно создан"}), 200
-            return render_template("pages/goods/ingridients/create.html")
+                return redirect('/manager/goods')
+            return render_template("manager/good-form.html")
 
+
+@app.route('/institute/<goods_id>/create', methods=['GET', 'POST'])
+@login_required
+def create_institute(goods_id):
+    if request.method == "POST":
+        new_ings = Ingridient(title=request.form['title'], goods_id=goods_id)
+        Ingridient.create(new_ings)
+        return redirect(f"/goods/update/{goods_id}")
+    return render_template("manager/ingridients-form.html")
 
 # --status update--
 
@@ -87,7 +94,7 @@ def orders_update_status(order_id):
 
 # ==entity update/delete==
 
-@app.route("/<entity>/<action>/<entity_id>")
+@app.route("/<entity>/<action>/<entity_id>", methods=['GET', 'POST'])
 @login_required
 def entity_actions(entity, action, entity_id):
     match entity:
@@ -96,11 +103,11 @@ def entity_actions(entity, action, entity_id):
                 case "update":
                     old_goods = Goods.query.filter_by(id=entity_id).first()
                     if request.method == "POST":
-                        new_goods = Goods(title=request.form['title'], photo_URL=request.form['photo_URL'],
+                        new_goods = Goods(title=request.form['title'], photo_URL=request.form['image-url'],
                             description=request.form['description'], price=request.form['price'], )
                         Goods.update(old_goods, new_goods)
-                        return jsonify({"message": "Блюдо было успешно обновлено"}), 200
-                    return render_template("pages/goods/update.html")
+                        return redirect('/manager/goods')
+                    return render_template("manager/good-form.html", goods=old_goods)
                 case "delete":
                     return "Delete"
         case "ingridient":
@@ -108,10 +115,10 @@ def entity_actions(entity, action, entity_id):
                 case "update":
                     old_ings = Ingridient.query.filter_by(id=entity_id).first()
                     if request.method == "POST":
-                        new_ings = Ingridient(title=request.form['title'], goods_id=request.form['goods_id'])
+                        new_ings = Ingridient(title=request.form['title'], goods_id=old_ings.goods_id)
                         Ingridient.update(old_ings, new_ings)
-                        return jsonify({"message": "Ингридиент был успешно обновлён"}), 200
-                    return render_template("pages/ingridients/update.html")
+                        return (f"/goods/update/{old_ings.goods_id}")
+                    return render_template("pages/ingridients/update.html", ingridients=old_ings)
                 case "delete":
                     return "Delete"
 

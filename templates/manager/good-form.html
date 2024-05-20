@@ -15,13 +15,13 @@
     <nav class="header__nav">
         <ul class="nav__ul">
             <li class="nav__li">
-                <a href="/" class="nav__a">Заказы</a>
+                <a href="/index/manager" class="nav__a">Заказы</a>
             </li>
             <li class="nav__li">
                 <span class="nav__a__active">Блюда</span>
             </li>
             <li class="nav__li">
-                <a href="#" class="logout nav__a">Выйти</a>
+                <a href="/logout" class="logout nav__a">Выйти</a>
             </li>
         </ul>
     </nav>
@@ -32,7 +32,7 @@
         <h1>Создать блюдо</h1>
 
         {% if goods %}
-            <a href="#">Добавить возможные ингридиенты</a>
+            <a href="/institute/{{ goods.id }}/create">Добавить возможные ингридиенты</a>
             <ul>
                 {% for ingridient in goods.ingridients %}
                     <li data-ingr-id="{{ ingridient.id }}"> {{ ingridient.title }}
@@ -40,6 +40,7 @@
                     </li>
                 {% endfor %}
             </ul>
+
         {% endif %}
 
         <form method="POST" action="">

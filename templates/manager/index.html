@@ -18,10 +18,10 @@
                 <span class="nav__a__active">Заказы</span>
             </li>
             <li class="nav__li">
-                <a href="/manager" class="nav__a">Блюда</a>
+                <a href="/manager/goods" class="nav__a">Блюда</a>
             </li>
             <li class="nav__li">
-                <a href="#" class="logout nav__a">Выйти</a>
+                <a href="/logout" class="logout nav__a">Выйти</a>
             </li>
         </ul>
     </nav>
@@ -30,7 +30,7 @@
 {% block content %}
     <div class="orders">
         <h2>Необработанные заказы</h2>
-        {% for order in inactive_orders %}
+        {% for order in orders_in_processing %}
             <div class="order">
                 <h3>Заказ №{{ order.id }}</h3>
                 {% for user in order.users_orders %}

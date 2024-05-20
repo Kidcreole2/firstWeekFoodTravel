@@ -113,7 +113,6 @@ class Goods(db.Model):
         
     @staticmethod
     def update(old_goods, new_goods):
-        old_goods = Goods.query.filter_by(id=new_goods.id).first()
         old_goods.title = new_goods.title
         old_goods.photo_URL = new_goods.photo_URL
         old_goods.description = new_goods.description
