@@ -2,78 +2,80 @@
 
 {% from 'admin/admin-header.html' import admin_logo, admin_nav %}
 
-      {% block styles %}
-    <link rel="stylesheet" href=" {{ url_for('static', filename='css/courier.css') }} " />
-    <link rel="stylesheet" href=" {{ url_for('static', filename='css/manager.css') }} " />
-      {% endblock %}
+{% block styles %}
+    <link rel="stylesheet" href=" {{ url_for('static', filename='css/courier.css') }} "/>
+    <link rel="stylesheet" href=" {{ url_for('static', filename='css/manager.css') }} "/>
+{% endblock %}
 
 {% block logo %}
     {{ admin_logo() }}
 {% endblock %}
 
 {% block nav %}
-	{{ admin_nav() }}
+    {{ admin_nav() }}
 {% endblock %}
 
 {% block content %}
-        <div class="orders">
-          <div class="active-orders">
+    <div class="orders">
+        <div class="active-orders">
             <h2>Доставка в работе</h2>
-            <div class="order">
-              <h3>Заказ № 304</h3>
-              <div class="user-phone">
-                <span class="info">Номер клиента:</span>
-                <a href="tel:+78005553535">88005553535</a>
-              </div>
-              <div class="order-info">
-                <div class="from-address">
-                  <span class="info">Откуда:</span> Проспект Звёздной Пыли, 789,
-                  город Ноктюрн
+            {% for order in activer_orders %}
+                <div class="order">
+                <h3>Заказ №{{ order.id }}</h3>
+                <div class="user-phone">
+                    <span class="info">Номер клиента:</span>
+                    <a href="tel:+78005553535">{{ order.users.phone_number }}</a>
                 </div>
-                <div class="to-address">
-                  <span class="info">Куда:</span> Улица Песчаных Дюн, 101, город
-                  Ноктюрн
+                <div class="order-info">
+                    <div class="from-address">
+                        <span class="info">Откуда:</span> Проспект Звёздной Пыли, 789,
+                        город Ноктюрн
+                    </div>
+                    <div class="to-address">
+                        <span class="info">Куда:</span> Улица Песчаных Дюн, 101, город
+                        Ноктюрн
+                    </div>
                 </div>
-              </div>
-              <div class="order-delivered">
+            {% endfor %}
+            <div class="order-delivered">
                 <button class="button">Доставлено</button>
-              </div>
+            </div>
             </div>
             <div class="order">
-              <h3>Заказ № 304</h3>
-              <div class="order-info">
-                <div class="from-address">
-                  <span class="info">Откуда:</span> Проспект Звёздной Пыли, 789,
-                  город Ноктюрн
+                <h3>Заказ № 304</h3>
+                <div class="order-info">
+                    <div class="from-address">
+                        <span class="info">Откуда:</span> Проспект Звёздной Пыли, 789,
+                        город Ноктюрн
+                    </div>
+                    <div class="to-address">
+                        <span class="info">Куда:</span> Улица Песчаных Дюн, 101, город
+                        Ноктюрн
+                    </div>
                 </div>
-                <div class="to-address">
-                  <span class="info">Куда:</span> Улица Песчаных Дюн, 101, город
-                  Ноктюрн
+                <div class="order-delivered">
+                    <button class="button">Доставлено</button>
                 </div>
-              </div>
-              <div class="order-delivered">
-                <button class="button">Доставлено</button>
-              </div>
             </div>
-          </div>
-          <div class="inactive-orders">
+        </div>
+        <div class="inactive-orders">
             <h2>Ожидет курьера</h2>
             <div class="order">
-              <h3>Заказ № 304</h3>
-              <div class="order-info">
-                <div class="from-address">
-                  <span class="info">Откуда:</span> Проспект Звёздной Пыли, 789,
-                  город Ноктюрн
+                <h3>Заказ № 304</h3>
+                <div class="order-info">
+                    <div class="from-address">
+                        <span class="info">Откуда:</span> Проспект Звёздной Пыли, 789,
+                        город Ноктюрн
+                    </div>
+                    <div class="to-address">
+                        <span class="info">Куда:</span> Улица Песчаных Дюн, 101, город
+                        Ноктюрн
+                    </div>
                 </div>
-                <div class="to-address">
-                  <span class="info">Куда:</span> Улица Песчаных Дюн, 101, город
-                  Ноктюрн
+                <div class="order-delivered">
+                    <button class="button">Взять в работу</button>
                 </div>
-              </div>
-              <div class="order-delivered">
-                <button class="button">Взять в работу</button>
-              </div>
             </div>
-          </div>
         </div>
+    </div>
 {% endblock %}

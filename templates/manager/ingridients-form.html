@@ -33,8 +33,8 @@
     <button id="make-field" class="button">Добавить поле ввода</button>
     <form method="POST">
         <div class=".form-component">
-            <label for="name_id">Название ингридиента</label>
-            <input id="name_id" name="name" placeholder="Лосось">
+            <label for="title">Название ингридиента</label>
+            <input id="title" name="title" value="{% if ingridient %}{{ ingridient.title }}{% endif %}" placeholder="Лосось">
         </div>
     </form>
     <button id="send" class="button">Создать</button>

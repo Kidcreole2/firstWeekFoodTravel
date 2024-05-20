@@ -31,11 +31,12 @@
         <div class="goods">
           <div class="goods-head">
             <h2>Блюда</h2>
-            <button class="button">Создать</button>
+            <a class="button">Создать</a>
           </div>
+            {% for good in goods %}
           <div class="row good">
-            <div class="col"><h4>Филадельфия</h4></div>
-            <div class="col"><span class="price">450</span></div>
+            <div class="col"><h4>{{ good.title }}</h4></div>
+            <div class="col"><span class="price">{{ good.price }}</span></div>
             <div class="col">
               <a class="button" href="">Отредактировать</a>
             </div>
@@ -43,29 +44,6 @@
               <button class="button" href="">Удалить</button>
             </div>
           </div>
-          <div class="row good">
-            <div class="col"><h4>Филадельфия</h4></div>
-            <div class="col"><span class="price">450</span></div>
-            <div class="col"><a class="button" href="">Отредактировать</a></div>
-            <div class="col">
-              <button class="button" href="">Удалить</button>
-            </div>
-          </div>
-          <div class="row good">
-            <div class="col"><h4>Филадельфия</h4></div>
-            <div class="col"><span class="price">450</span></div>
-            <div class="col"><a class="button" href="">Отредактировать</a></div>
-            <div class="col">
-              <button class="button" href="">Удалить</button>
-            </div>
-          </div>
-          <div class="row good">
-            <div class="col"><h4>Филадельфия</h4></div>
-            <div class="col"><span class="price">450</span></div>
-            <div class="col"><a class="button" href="">Отредактировать</a></div>
-            <div class="col">
-              <button class="button" href="">Удалить</button>
-            </div>
-          </div>
+            {% endfor %}
         </div>
 {% endblock %}

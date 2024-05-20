@@ -22,7 +22,7 @@ def index(role):
             return render_template("kitchen/index.html", orders_wait_kitchen=orders_wait_kitchen,
                                    orders_on_kitchen=orders_on_kitchen, orders_wait_courier=orders_wait_courier)
         case "courier":
-            orders = Orders.query.filter_by(status="waiting courier").all()
+            orders = Users_Orders.query.filter(Users_Orders.status == "waiting courier").all()
             active_orders = Users_Orders.query.filter(Users_Orders.has(Users_Orders.user_id == current_user.id),
                                                       Users_Orders.users.has(Users.status == "on the way")).all()
             return render_template("courier/index.html", orders=orders, activer_orders=active_orders)
