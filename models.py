@@ -4,8 +4,8 @@ from core import app
 import datetime, string, random
 db = SQLAlchemy(app)
 
-class Users(UserMixin, db.Model):
-    __tablename__ = "users"
+class User(UserMixin, db.Model):
+    __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True)
     login = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(20), nullable=False)
@@ -16,7 +16,7 @@ class Users(UserMixin, db.Model):
     phone_number = db.Column(db.String(20))
 
     # связи
-    users_orders = db.relationship("Users_Orders", back_populates="users", cascade="all, delete")
+    user_order = db.relationship("User_Order", back_populates="user", cascade="all, delete")
     
     
     def __init__(self, login: str,phone_number: str, password: str, firstname: str, lastname: str, surname: str, role: str):
@@ -30,7 +30,7 @@ class Users(UserMixin, db.Model):
     
     @staticmethod
     def auth_user(login, password) -> dict:
-        user = Users.query.filter_by(login=login).first()
+        user = User.query.filter_by(login=login).first()
         print(user)
         if user is not None and user.password == password:
             login_user(user)
@@ -40,7 +40,7 @@ class Users(UserMixin, db.Model):
     
     @staticmethod
     def create(user) -> dict:
-        new_user = Users.query.filter_by(login=user.login).first()
+        new_user = User.query.filter_by(login=user.login).first()
         if new_user is None:
             db.session.add(user)
             db.session.commit()
@@ -50,7 +50,7 @@ class Users(UserMixin, db.Model):
         
     @staticmethod 
     def update(old_user_id, new_user): 
-        old_user = Users.query.filter_by(id=old_user_id).first()
+        old_user = User.query.filter_by(id=old_user_id).first()
         old_user.login = new_user.login
         old_user.password = new_user.password
         old_user.firstname = new_user.firstname
@@ -61,7 +61,7 @@ class Users(UserMixin, db.Model):
 
     @staticmethod
     def delete(user_id):
-        Users.query.filter_by(id=user_id).delete()
+        User.query.filter_by(id=user_id).delete()
         db.session.commit()
 
     @staticmethod
@@ -93,8 +93,8 @@ class Goods(db.Model):
     price = db.Column(db.Integer, nullable=False)
     
     # связи
-    goods_orders = db.relationship("Goods_Orders", back_populates="goods", cascade="all, delete")
-    ingridients = db.relationship("Ingridient", back_populates="goods", cascade="all, delete")
+    goods_order = db.relationship("Goods_Order", back_populates="goods", cascade="all, delete")
+    ingridient = db.relationship("Ingridient", back_populates="goods", cascade="all, delete")
     def __init__(self, title: str, price: int, photo_URL = "", description = ""):
         self.title = title
         self.photo_URL = photo_URL
@@ -125,7 +125,7 @@ class Goods(db.Model):
         Goods.query.filter_by(id=goods_id).delete()
         db.session.commit()
     
-class Orders(db.Model):
+class Order(db.Model):
     __tablename__ = "order"
     id = db.Column(db.Integer, primary_key=True)
     delivery_from_address = db.Column(db.String(50),nullable=False)
@@ -136,8 +136,8 @@ class Orders(db.Model):
     price = db.Column(db.Integer, nullable=False)
     
     # связи
-    users_orders = db.relationship("Users_Orders", back_populates="orders", cascade="all, delete")
-    goods_orders = db.relationship("Goods_Orders", back_populates="orders", cascade="all, delete")
+    user_order = db.relationship("User_Order", back_populates="order", cascade="all, delete")
+    goods_order = db.relationship("Goods_Order", back_populates="order", cascade="all, delete")
     
     def __init__(self, delivery_from_address: str,delivery_to_address: str, delivery_date: datetime.datetime, status: str, comment: str, price: int):
         self.delivery_from_address = delivery_from_address
@@ -149,17 +149,17 @@ class Orders(db.Model):
         
     @staticmethod
     def create(order):
-        new_order = Orders.query.filter_by(id=order.id).first()
+        new_order = Order.query.filter_by(id=order.id).first()
         if new_order is None:
             db.session.add(order)
             db.session.commit()
-            return Orders.query.filter_by(id=order.id).first().id
+            return Order.query.filter_by(id=order.id).first().id
         else: 
             return new_order.id
         
     @staticmethod
     def update(old_order, new_order):
-        old_order = Orders.query.filter_by(id=old_order.id).first()
+        old_order = Order.query.filter_by(id=old_order.id).first()
         old_order.delivery_from_address = new_order.delivery_from_address
         old_order.delivery_to_address = new_order.delivery_to_address
         old_order.delivery_date = new_order.delivery_date
@@ -170,7 +170,7 @@ class Orders(db.Model):
 
     @staticmethod
     def delete(order_id):
-        Orders.query.filter_by(id=order_id).delete()
+        Order.query.filter_by(id=order_id).delete()
         db.session.commit()
             
 class Ingridient(db.Model):
@@ -180,7 +180,7 @@ class Ingridient(db.Model):
     goods_id = db.Column(db.Integer, db.ForeignKey("goods.id"))
     
     # связи
-    ingridient_orders = db.relationship("Ingridient_Orders", back_populates="ingridient", cascade="all, delete")
+    ingridient_order = db.relationship("Ingridient_Order", back_populates="ingridient", cascade="all, delete")
     goods = db.relationship("Goods", back_populates="ingridient")
     
     def __init__(self, title: str, goods_id: int):
@@ -209,90 +209,90 @@ class Ingridient(db.Model):
         Ingridient.query.filter_by(id=ingridient_id).delete()
         db.session.commit()
     
-class Users_Orders(db.Model):
-    __tablename__ = "users_orders"
+class User_Order(db.Model):
+    __tablename__ = "user_order"
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     order_id = db.Column(db.Integer, db.ForeignKey("order.id"))
 
     # связи
-    users = db.relationship("Users", back_populates="users_orders")
-    order = db.relationship("Order", back_populates="users_orders")
+    user = db.relationship("User", back_populates="user_order")
+    order = db.relationship("Order", back_populates="user_order")
     
     def __init__(self, user_id: int, order_id: int):
         self.user_id = user_id
         self.order_id = order_id
         
     @staticmethod
-    def create(users_orders):
-            db.session.add(users_orders)
+    def create(user_order):
+            db.session.add(user_order)
             db.session.commit()
             
     @staticmethod
     def delete_by_user(user_id):
-        users = Users_Orders.query.filter_by(user_id=user_id).all()
-        for user in users:
-            Users_Orders.query.filter_by(user_id=user.id).delete()
+        user = User_Order.query.filter_by(user_id=user_id).all()
+        for user in user:
+            User_Order.query.filter_by(user_id=user.id).delete()
         db.session.commit()
     
     @staticmethod
     def delete_by_order(order_id):
-        orders = Users_Orders.query.filter_by(order_id=order_id).all()
-        for order in orders:
-            Users_Orders.query.filter_by(order_id=order.id).delete()
+        order = User_Order.query.filter_by(order_id=order_id).all()
+        for order in order:
+            User_Order.query.filter_by(order_id=order.id).delete()
         db.session.commit()
     
-class Goods_Orders(db.Model):
-    __tablename__ = "goods_orders"
+class Goods_Order(db.Model):
+    __tablename__ = "goods_order"
     id = db.Column(db.Integer, primary_key=True)
     goods_id = db.Column(db.Integer, db.ForeignKey("goods.id"))
     order_id = db.Column(db.Integer, db.ForeignKey("order.id"))
 
     # связи
-    goods = db.relationship("Goods", back_populates="goods_orders")
-    order = db.relationship("Order", back_populates="goods_orders")
-    ingridient_orders = db.relationship("Ingridient_Orders", back_populates="goods_orders", cascade="all, delete")
+    goods = db.relationship("Goods", back_populates="goods_order")
+    order = db.relationship("Order", back_populates="goods_order")
+    ingridient_order = db.relationship("Ingridient_Order", back_populates="goods_order", cascade="all, delete")
     
     def __init__(self, goods_id: int, order_id: int):
         self.goods_id = goods_id
         self.order_id = order_id
         
     @staticmethod
-    def create(goods_orders):
-            db.session.add(goods_orders)
+    def create(goods_order):
+            db.session.add(goods_order)
             db.session.commit()
             
     @staticmethod
     def delete_by_goods(goods_id):
-        goodses = Goods_Orders.query.filter_by(goods_id=goods_id).all()
+        goodses = Goods_Order.query.filter_by(goods_id=goods_id).all()
         for goods in goodses:
-            Goods_Orders.query.filter_by(goods_id=goods.id).delete()
+            Goods_Order.query.filter_by(goods_id=goods.id).delete()
         db.session.commit()
     
     @staticmethod
     def delete_by_order(order_id):
-        orders = Goods_Orders.query.filter_by(order_id=order_id).all()
+        orders = Goods_Order.query.filter_by(order_id=order_id).all()
         for order in orders:
-            Goods_Orders.query.filter_by(order_id=order.id).delete()
+            Goods_Order.query.filter_by(order_id=order.id).delete()
         db.session.commit()
 
-class Ingridient_Orders(db.Model):
-    __tablename__ = "ingridient_orders"
+class Ingridient_Order(db.Model):
+    __tablename__ = "ingridient_order"
     id = db.Column(db.Integer, primary_key=True)
-    ingridient_id = db.Column(db.Integer, db.ForeignKey("goods.id"))
-    goods_orders_id = db.Column(db.Integer, db.ForeignKey("goods_orders.id"))
+    ingridient_id = db.Column(db.Integer, db.ForeignKey("ingridient.id"))
+    goods_order_id = db.Column(db.Integer, db.ForeignKey("goods_order.id"))
 
     # связи
-    goods_orders = db.relationship("Goods_Orders", back_populates="ingridient_orders")
-    ingridient = db.relationship("Ingridient", back_populates="ingridient_orders")
+    goods_order = db.relationship("Goods_Order", back_populates="ingridient_order")
+    ingridient = db.relationship("Ingridient", back_populates="ingridient_order")
     
     def __init__(self, goods_id: int, order_id: int):
         self.goods_id = goods_id
         self.order_id = order_id
         
     @staticmethod
-    def create(goods_orders):
-            db.session.add(goods_orders)
+    def create(goods_order):
+            db.session.add(goods_order)
             db.session.commit()
         
 
