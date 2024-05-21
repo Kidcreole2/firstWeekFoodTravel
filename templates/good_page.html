@@ -12,7 +12,6 @@
 {% block nav %}
     <nav class="header__nav">
         <ul class="nav__ul">
-            <li class="nav__li"><i class="cart bi bi-cart4"></i></li>
             <li class="nav__li">
                 <a href="#" class="logout nav__a">Выйти</a>
             </li>
@@ -20,42 +19,34 @@
     </nav>
 {% endblock %}
 
+{% block script %}
+    <script src="{{ url_for('static', filename='js/goods-page.js') }}"></script>
+{% endblock %}
+
 {% block content %}
     <div class="good-info">
         <div class="good-info-image">
-            <img src="./img/fila.jpg" alt=""/>
+            <img src="{{ goods.photo_URL }}" alt=""/>
         </div>
         <div class="good-info-decription">
-            <h2>Филадельфия</h2>
-            <div class="price">450</div>
+            <h2>{{ goods.title }}</h2>
+            <div class="price">{{ goods.price }}</div>
             <div class="description">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Excepturi, perspiciatis animi, quia dicta soluta cupiditate
-                voluptatem doloremque consequatur quas obcaecati quo cumque sed
-                doloribus. Rerum nemo sint perspiciatis non! Id.
+               {{ goods.desc }}
             </div>
         </div>
         <div class="ingridients">
             <ul>
+                {% for ingridient in goods.ingridient %}
                 <li>
-                    <input type="checkbox" name="losos" id="losos"/>
-                    <label for="losos">Больше рыбки </label>
-                    <span class="add-price">+ 30</span>
+                    <input type="checkbox" name="losos" id="{{ ingridient.id }}"/>
+                    <label for="losos">{{ ingridient.title }}</label>
                 </li>
-                <li>
-                    <input type="checkbox" name="losos" id="losos"/>
-                    <label for="losos">Больше рыбки </label>
-                    <span class="add-price">+ 30</span>
-                </li>
-                <li>
-                    <input type="checkbox" name="losos" id="losos"/>
-                    <label for="losos">Больше рыбки </label>
-                    <span class="add-price">+ 30</span>
-                </li>
+                {% endfor %}
             </ul>
         </div>
         <div class="make-order">
-            <button>Сделать заказ</button>
+            <button id="{{ goods.id }}" class="add-to-cart button">Добавить в корзину</button>
         </div>
     </div>
 {% endblock %}

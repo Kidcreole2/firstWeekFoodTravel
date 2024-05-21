@@ -61,27 +61,6 @@ nav {
   transition: linear 0.3s;
 }
 
-.cart::after {
-  content: "10";
-  position: absolute;
-  /* display: block; */
-  font-size: 0.4em;
-  background-color: #f78575;
-  color: white;
-  width: 25px;
-  height: 25px;
-  border-radius: 14px;
-  /* left: 5px; */
-  /* bottom: 10px; */
-  z-index: 1000;
-  text-align: center;
-}
-
-.cart:hover::after {
-  display: none;
-  transition: ease-out 0.3s;
-}
-
 .nav__li i:hover {
   color: white;
   padding: 5px;

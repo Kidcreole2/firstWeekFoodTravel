@@ -1,6 +1,19 @@
+const cart = localStorage.getItem('cart')
+
+if (cart) {
+    $(".cart").show()
+} else {
+    $(".cart").hide()
+}
+
 $(document).ready(() => {
-    $('.good-card').before().click((event) => {
-        let id = $(event.target).attr('id')
-        console.log('before', id)
-    });
+    $(".good-card").click((e) => {
+        let id = $(e.target).attr("id")
+        window.location.replace(`/goods/${id}`)
+    })
+
+    $(".cart").click((e) => {
+        window.location.replace('/order/create')
+    })
 })
+

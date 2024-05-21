@@ -13,7 +13,7 @@ def loader_user(user_id):
 
 # ==Home Pages==
 
-@app.route("/index/<role>")
+@app.route("/index/<string:role>")
 @login_required
 def index(role):
     match role:
@@ -46,7 +46,7 @@ def manager_goods():
 
 # --Create entity--
 
-@app.route("/<entity>/create", methods=['GET', 'POST'])
+@app.route("/<string:entity>/create", methods=['GET', 'POST'])
 @login_required
 def create_entity(entity):
     match entity:
@@ -60,7 +60,7 @@ def create_entity(entity):
                 for goods in goodses:
                     new_goods_order = Goods_Order(goods_id=goods, order_id=new_order_id)
                 return jsonify({"message": "Заказ был успешно создан"}), 200
-            return render_template("pages/orders/cart.html")
+            return render_template("make-order.html")
         case "goods":
             if request.method == "POST":
                 new_goods = Goods(title=request.form['title'], photo_URL=request.form['image-url'],
@@ -70,7 +70,7 @@ def create_entity(entity):
             return render_template("manager/good-form.html")
 
 
-@app.route('/ingridient/<goods_id>/create', methods=['GET', 'POST'])
+@app.route('/ingridient/<int:goods_id>/create', methods=['GET', 'POST'])
 @login_required
 def create_ingridient(goods_id):
     if request.method == "POST":
@@ -80,8 +80,21 @@ def create_ingridient(goods_id):
     return render_template("manager/ingridients-form.html")
 
 # --status update--
+@app.route('/goods/<int:goods_id>', methods=['GET', 'POST'])
+@login_required
+def goods_data(goods_id):
+    goods = Goods.query.filter_by(id=goods_id).first()
+    if request.method == "POST":
+        return jsonify({"name": goods.title, "price": goods.price}), 200
+    return render_template('good_page.html', goods=goods)
 
-@app.route("/order/update/<order_id>")
+@app.route('/ingridient/<int:ingridient_id>', methods=['POST'])
+@login_required
+def ingridient(ingridient_id):
+    ingridient = Ingridient.query.filter_by(id=ingridient_id).first()
+    return jsonify({"title": ingridient.title}), 200
+
+@app.route("/order/update/<int:order_id>")
 @login_required
 def orders_update_status(order_id):
     old_order = Order.query.filter_by(id=order_id).first()
@@ -94,7 +107,7 @@ def orders_update_status(order_id):
 
 # ==entity update/delete==
 
-@app.route("/<entity>/<action>/<entity_id>", methods=['GET', 'POST'])
+@app.route("/<string:entity>/<string:action>/<int:entity_id>", methods=['GET', 'POST'])
 @login_required
 def entity_actions(entity, action, entity_id):
     match entity:
@@ -124,7 +137,7 @@ def entity_actions(entity, action, entity_id):
                     Ingridient.delete(entity_id)
                     return jsonify({"message": "Ингредиент успешно удален"}), 200
 
-@app.route("/user/cart_element/<goods_id>", methods=['POST'])
+@app.route("/user/cart_element/<int:goods_id>", methods=['POST'])
 @login_required
 def user_cart_element(goods_id):
     goods = Goods.query.filter_by(id=goods_id).first()
@@ -133,7 +146,7 @@ def user_cart_element(goods_id):
 
 #  ==Users crud==
 
-@app.route("/admin/user/create/<role>", methods=["GET", "POST"])
+@app.route("/admin/user/create/<string:role>", methods=["GET", "POST"])
 @login_required
 def user_create(role):
     match role:
@@ -176,7 +189,7 @@ def user_create(role):
             return render_template("admin/stuff-form.html", role=role)
 
 
-@app.route("/admin/user/update/<user_id>", methods=["GET", "POST"])
+@app.route("/admin/user/update/<int:user_id>", methods=["GET", "POST"])
 @login_required
 def user_update(user_id):
     old_user = User.query.filter_by(id=user_id).first()
@@ -232,7 +245,7 @@ def sign_up():
             surname=request.form["surname"],
             login=request.form["login"],
             password=request.form["password"],
-            role="admin",
+            role="client",
             phone_number=request.form["phone"])
         pprint.pprint(User.create(user))
         return redirect("/")
