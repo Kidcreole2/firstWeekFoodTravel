@@ -1,9 +1,11 @@
 import pprint
+import json
 
 from flask import request, render_template, redirect, url_for, flash, get_flashed_messages, jsonify
 from flask_login import logout_user, current_user, login_required
 from core import app, login_manager
 from models import *
+from datetime import datetime as date
 
 
 @login_manager.user_loader
@@ -52,13 +54,32 @@ def create_entity(entity):
     match entity:
         case "order":
             if request.method == "POST":
-                new_order = Order(delivery_address=request.form['delivery_address'],
-                    delivery_date=request.form['delivery_date'], status=request.form['status'],
-                    comment=request.form['comment'], price=request.form['price'])
-                new_order_id = Order.create(new_order)
-                goodses = []
+                order_json = request.form['cart']
+                goodses = json.loads(order_json)
+                print(goodses)
                 for goods in goodses:
-                    new_goods_order = Goods_Order(goods_id=goods, order_id=new_order_id)
+                    print(goods['ingridients'])
+                new_order = Order(
+                    delivery_from_address="Нахуй",
+                    delivery_to_address=request.form['addressTo'],
+                    delivery_date=date.strptime("2001-01-01", "%Y-%m-%d"),
+                    status="in processing",
+                    comment="fuck you", price=100
+                    )
+                new_order_id = Order.create(new_order)
+                for goods in goodses:
+                    new_goods_order = Goods_Order(
+                        goods_id=goods['goods'], 
+                        order_id=new_order_id
+                        )
+                    new_goods_order_id = Goods_Order.create(new_goods_order)
+                    ingridients = goods['ingridients']
+                    for ingridient in ingridients:
+                        new_ingridient_order = Ingridient_Order(
+                            ingridient_id = ingridient,
+                            goods_order_id=new_goods_order_id
+                            )
+                        Ingridient_Order.create(new_ingridient_order)
                 return jsonify({"message": "Заказ был успешно создан"}), 200
             return render_template("make-order.html")
         case "goods":

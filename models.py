@@ -260,6 +260,7 @@ class Goods_Order(db.Model):
     def create(goods_order):
             db.session.add(goods_order)
             db.session.commit()
+            return goods_order.id
             
     @staticmethod
     def delete_by_goods(goods_id):
@@ -285,9 +286,9 @@ class Ingridient_Order(db.Model):
     goods_order = db.relationship("Goods_Order", back_populates="ingridient_order")
     ingridient = db.relationship("Ingridient", back_populates="ingridient_order")
     
-    def __init__(self, goods_id: int, order_id: int):
-        self.goods_id = goods_id
-        self.order_id = order_id
+    def __init__(self, ingridient_id: int, goods_order_id: int):
+        self.ingridient_id = ingridient_id
+        self.goods_order_id = goods_order_id
         
     @staticmethod
     def create(goods_order):
