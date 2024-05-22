@@ -48,16 +48,21 @@ function getGoods(goodsId) {
  }
 
  let data = getData()
- $(".order-data > ul").html(data.html)
+$(".order-data > ul").html(data.html)
+$("span.total-price").html(data.price)
 
 $(document).ready(() => {
-    $("#make-order").click(() => {
+    $("#make-order").click((e) => {
+        e.preventDefault()
         let cart = localStorage.getItem("cart")
+        // console.log($("textarea[name='comment']").val())
         $.ajax({
             method:"POST",
             dataType: "html",
             data: {
                 cart: cart,
+                price: data.price,
+                comment: $("textarea[name='comment']").val(),
                 addressTo: $("input[name='address-to']").val()
             },
             success: (data) => {

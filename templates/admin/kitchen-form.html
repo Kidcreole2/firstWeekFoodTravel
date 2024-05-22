@@ -28,6 +28,10 @@
               <input type="text" name="login" placeholder="Login" id="login" value="{% if kitchen %}{{ kitchen.login }}{% endif %}" />
             </div>
             <div class="form-component">
+                <label for="address">Адрес</label>
+                <input type="text" name="address" placeholder="ул. Пушкина, д. Колотушкина, кв. 10", value="{% if kitchen %}{{ kitchen.firstname }}{% endif %}">
+            </div>
+            <div class="form-component">
               <label for="password">Пароль</label>
               <input
                 type="{% if kitchen %}text{% else %}password{% endif %}"

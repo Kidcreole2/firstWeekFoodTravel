@@ -64,7 +64,7 @@ def create_entity(entity):
                     delivery_to_address=request.form['addressTo'],
                     delivery_date=date.now(),
                     status="in processing",
-                    comment="fuck you", price=100
+                    comment=request.form["comment"], price=request.form["price"]
                     )
                 new_order_id = Order.create(new_order)
                 for goods in goodses:
