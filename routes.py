@@ -62,7 +62,7 @@ def create_entity(entity):
                 new_order = Order(
                     delivery_from_address="Нахуй",
                     delivery_to_address=request.form['addressTo'],
-                    delivery_date=date.strptime("2001-01-01", "%Y-%m-%d"),
+                    delivery_date=date.now(),
                     status="in processing",
                     comment="fuck you", price=100
                     )
