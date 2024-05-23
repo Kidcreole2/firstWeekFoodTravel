@@ -64,7 +64,8 @@ def create_entity(entity):
                     delivery_to_address=request.form['addressTo'],
                     delivery_date=date.now(),
                     status="in processing",
-                    comment=request.form["comment"], price=request.form["price"]
+                    comment=request.form['comment'],
+                    price=request.form['price']
                     )
                 new_order_id = Order.create(new_order)
                 for goods in goodses:
@@ -115,16 +116,30 @@ def ingridient(ingridient_id):
     ingridient = Ingridient.query.filter_by(id=ingridient_id).first()
     return jsonify({"title": ingridient.title}), 200
 
-@app.route("/order/update/<int:order_id>")
+@app.route("/order/update/<string:is_courier>/<int:order_id>")
 @login_required
-def orders_update_status(order_id):
+def orders_update_status(is_courier,order_id):
     old_order = Order.query.filter_by(id=order_id).first()
     if request.method == "POST":
-        new_order = Order(delivery_address=old_order.delivery_address, delivery_date=old_order.delivery_date,
-            status=request.form['status'], comment=old_order.comment, price=old_order.price)
+        new_order = Order(
+            delivery_address=old_order.delivery_address, 
+            delivery_date=old_order.delivery_date,
+            status=request.form['status'], 
+            comment=old_order.comment, 
+            price=old_order.price
+            )
         Order.update(old_order, new_order)
         return jsonify({"message": "Заказ был успешно обновлён"}), 200
 
+@app.route("/order/update/courier/<int:order_id>")
+@login_required
+def orders_give_courier_id(is_courier,order_id):
+    if request.method == "POST":
+        new_user_order = User_Order(
+            user_id=current_user.id,
+            order_id=order_id
+        )
+        User_Order.create(new_user_order)
 
 # ==entity update/delete==
 
