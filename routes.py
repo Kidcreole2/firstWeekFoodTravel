@@ -141,6 +141,23 @@ def orders_give_courier_id(order_id):
             order_id=order_id
         )
         User_Order.create(new_user_order)
+        
+# --orders list get--
+
+@app.route("/order/list")
+@login_required
+def orders_list():
+    orders_list = Order.query.all()
+    return render_template("", orders_list=orders_list)
+    
+        
+# --order get--
+
+@app.route("/order/get/<int:order_id>")
+@login_required
+def orders_give_courier_id(order_id):
+    order = Order.query.filter_by(id=order_id).first()
+    return render_template("", order=order)
 
 # ==entity update/delete==
 
@@ -197,8 +214,13 @@ def user_create(role):
             return render_template("admin/stuff-form.html", role=role)
         case "kitchen":
             if request.method == "POST":
-                user = User(lastname="1", firstname="1", surname="1", login=request.form["login"],
-                             password=request.form["password"], role="kitchen", phone_number="1")
+                user = User(
+                    lastname="1", 
+                    firstname=request.form["address"], 
+                    surname="3", 
+                    login=request.form["login"],
+                    password=request.form["password"], 
+                    role="kitchen", phone_number="1")
                 User.create(user)
                 return redirect("/index/admin")
 
@@ -227,7 +249,7 @@ def user_update(user_id):
         if old_user.role == "kitchen":
             new_user = User(
                 lastname=old_user.lastname,
-                firstname=old_user.firstname,
+                firstname=request.form["address"],
                 surname=old_user.surname,
                 login=request.form["login"],
                 password=request.form["password"],
