@@ -60,7 +60,7 @@ def create_entity(entity):
                 for goods in goodses:
                     print(goods['ingridients'])
                 new_order = Order(
-                    delivery_from_address="Нахуй",
+                    delivery_from_address=request.form["addressFrom"],
                     delivery_to_address=request.form['addressTo'],
                     delivery_date=date.now(),
                     status="in processing",
@@ -82,7 +82,8 @@ def create_entity(entity):
                             )
                         Ingridient_Order.create(new_ingridient_order)
                 return jsonify({"message": "Заказ был успешно создан"}), 200
-            return render_template("make-order.html")
+            kitchens = User.query.filter(User.role == "kitchen").all()
+            return render_template("make-order.html", kitchens=kitchens)
         case "goods":
             if request.method == "POST":
                 new_goods = Goods(title=request.form['title'], photo_URL=request.form['image-url'],
@@ -116,9 +117,9 @@ def ingridient(ingridient_id):
     ingridient = Ingridient.query.filter_by(id=ingridient_id).first()
     return jsonify({"title": ingridient.title}), 200
 
-@app.route("/order/update/<string:is_courier>/<int:order_id>")
+@app.route("/order/update/<int:order_id>")
 @login_required
-def orders_update_status(is_courier,order_id):
+def orders_update_status(order_id):
     old_order = Order.query.filter_by(id=order_id).first()
     if request.method == "POST":
         new_order = Order(
@@ -133,7 +134,7 @@ def orders_update_status(is_courier,order_id):
 
 @app.route("/order/update/courier/<int:order_id>")
 @login_required
-def orders_give_courier_id(is_courier,order_id):
+def orders_give_courier_id(order_id):
     if request.method == "POST":
         new_user_order = User_Order(
             user_id=current_user.id,
@@ -172,13 +173,6 @@ def entity_actions(entity, action, entity_id):
                 case "delete":
                     Ingridient.delete(entity_id)
                     return jsonify({"message": "Ингредиент успешно удален"}), 200
-
-@app.route("/user/cart_element/<int:goods_id>", methods=['POST'])
-@login_required
-def user_cart_element(goods_id):
-    goods = Goods.query.filter_by(id=goods_id).first()
-    return render_template("cart-element.html", goods=goods)
-
 
 #  ==Users crud==
 

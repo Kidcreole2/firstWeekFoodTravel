@@ -20,10 +20,11 @@
             <h2>Ожидание</h2>
             <ul class="orders-list">
                 {% for order in orders_wait_kitchen %}
-                    <li class="orders-item row row-cols-2">
+                    <li id="order_{{ order.id }}" class="orders-item row row-cols-2">
                         <a href="order-data">Заказ №{{ order.id }}</a>
                         <input
-                                class="button-small"
+                                id="{{ order.id }}"
+                                class="button-small on-kitchen"
                                 type="button"
                                 value="Взять в работу"
                         />
@@ -35,9 +36,12 @@
             <h2>В работе</h2>
             <ul class="orders-list">
                 {% for order in orders_on_kitchen %}
-                    <li class="orders-item row row-cols-2">
+                    <li id="order_{{ order.id }}" class="orders-item row row-cols-2">
                         <a href="order-data">Заказ №{% order.id %}</a>
-                        <input class="button-small" value="Приготовлено"/>
+                        <input type="button"
+                               id="{{ order.id }}"
+                               class="button-small wait-courier"
+                               value="Приготовлено"/>
                     </li>
                 {% endfor %}
             </ul>
@@ -48,10 +52,17 @@
                 {% for order in orders_wait_courier %}
                     <li class="orders-item row row-cols-2">
                         <a href="order-data">Заказ №{{ order.id }}</a>
-                        <input class="button-small" value="Забрано курьером"/>
+                        <input type="button"
+                               id="{{ order.id }}"
+                               class="button-small in-deliver"
+                               value="Забрано курьером"/>
                     </li>
                 {% endfor %}
             </ul>
         </div>
     </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{{ url_for('static', filename='js/change-order-status.js') }}"></script>
 {% endblock %}

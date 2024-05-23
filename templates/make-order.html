@@ -15,7 +15,7 @@
     <nav class="header__nav">
         <ul class="nav__ul">
             <li class="nav__li">
-                <a href="#" class="logout nav__a">Выйти</a>
+                <a href="/logout" class="logout nav__a">Выйти</a>
             </li>
         </ul>
     </nav>
@@ -42,6 +42,14 @@
             <div class="form-component">
                 <label for="comment">Комментарий к заказу</label>
                 <textarea type="" name="comment" placeholder="Ваш коментарий..." id="comment" rows="5" cols="33"></textarea>
+            </div>
+            <div class="form-component">
+                <label for="address-from">Выберете откуда доставлять</label>
+                <select name="address-from" id="address-from">
+                    {% for kitchen in kitchens %}
+                    <option value="{{ kitchen.firstname }}">{{ kitchen.firstname }}</option>
+                    {% endfor %}
+                </select>
             </div>
             <div class="form-buttons">
                 <button class="button" id="make-order">Оформить</button>

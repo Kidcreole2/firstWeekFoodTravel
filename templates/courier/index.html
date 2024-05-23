@@ -20,7 +20,7 @@
         <div class="active-orders">
             <h2>Доставка в работе</h2>
             {% for order in activer_orders %}
-                <div class="order">
+                <div id="order_{{ order.id }}" class="order">
                     <h3>Заказ №{{ order.order.id }}</h3>
                     <div class="user-phone">
                         <span class="info">Номер клиента:</span>
@@ -34,16 +34,16 @@
                             <span class="info">Куда:</span> {{ order.order.delivery_to_address }}
                         </div>
                     </div>
-                    <div class="order-delivered">
-                        <button class="button">Доставлено</button>
+                    <div class="delivered">
+                        <button id="{{ order.id }}" class="button">Доставлено</button>
                     </div>
                 </div>
             {% endfor %}
         </div>
-        <div class="inactive-orders">
+        <div  class="inactive-orders">
             <h2>Ожидет курьера</h2>
             {% for order in orders %}
-                <div class="order">
+                <div id="order_{{ order.id }}" class="order">
                     <h3>Заказ № {{ order.order.id }}</h3>
                     <div class="order-info">
                         <div class="user-phone">
@@ -57,11 +57,15 @@
                             <span class="info">Куда:</span> {{ order.order.delivery_to_address }}
                         </div>
                     </div>
-                    <div class="order-delivered">
-                        <button class="button">Взять в работу</button>
+                    <div class="in-delivery">
+                        <button id="{{ order.id }}" class="button">Взять в работу</button>
                     </div>
                 </div>
             {% endfor %}
         </div>
     </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{{ url_for('static', filename='js/change-order-status.js') }}"></script>
 {% endblock %}

@@ -63,7 +63,8 @@ $(document).ready(() => {
                 cart: cart,
                 price: data.price,
                 comment: $("textarea[name='comment']").val(),
-                addressTo: $("input[name='address-to']").val()
+                addressTo: $("input[name='address-to']").val(),
+                addressFrom: $("select[name='address-from'] option:selected").val()
             },
             success: (data) => {
                 localStorage.clear()

@@ -31,7 +31,7 @@
     <div class="orders">
         <h2>Необработанные заказы</h2>
         {% for order in orders_in_processing %}
-            <div class="order">
+            <div id="order_{{ order.id }}" class="order">
                 <h3>Заказ №{{ order.id }}</h3>
                 {% for user in order.users_orders %}
                     {% if user.users.role == "client" %}
@@ -65,4 +65,8 @@
             </div>
         {% endfor %}
     </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{{ url_for('static', filename='js/change-order-status.js') }}"></script>
 {% endblock %}
