@@ -3,7 +3,7 @@
 {% from 'admin/admin-header.html' import admin_logo %}
 
 {% block styles %}
-    <link rel="stylesheet" href=" {{ url_for('static', filename='css/login.css') }} "/>
+{#    <link rel="stylesheet" href=" {{ url_for('static', filename='css/login.css') }} "/>#}
     <link rel="stylesheet" href=" {{ url_for('static', filename='css/manager.css') }} "/>
 {% endblock %}
 
@@ -34,7 +34,7 @@
             <div id="order_{{ order.id }}" class="order">
                 <h3>Заказ №{{ order.id }}</h3>
                 {% for user in order.users_orders %}
-                    {% if user.users.role == "client" %}
+                    {% if user.user.role == "client" %}
                         <div class="user-phone">
                             <span class="info">Номер клиента:</span>
                             <a href="tel:{{ user.users.phone_number }}">{{ user.users.phone_number }}</a>
@@ -42,7 +42,7 @@
                     {% endif %}
                 {% endfor %}
                 <div class="order-info">
-                    {% for goods in order.goods_orders %}
+                    {% for goods in order.goods_order %}
                         <div class="order-composition">
                             <div class="order-name">
                                 <span class="info">Заказ:</span><span> {{ goods.goods.title }}</span>
@@ -60,7 +60,38 @@
                 </div>
 
                 <div class="order-upworked">
-                    <button class="button">Отправить заказ на кухню</button>
+                    <button id="{{ order.id }}" class="button">Отправить заказ на кухню</button>
+                </div>
+            </div>
+        {% endfor %}
+        <h2>Обработанные заказы</h2>
+        {% for order in orders_others %}
+            <div id="order_{{ order.id }}" class="order">
+                <h3>Заказ №{{ order.id }}</h3>
+                {% for user in order.user_order %}
+                    {% if user.user.role == "client" %}
+                        <div class="user-phone">
+                            <span class="info">Номер клиента:</span>
+                            <a href="tel:{{ user.user.phone_number }}">{{ user.user.phone_number }}</a>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <div class="order-info">
+                    {% for goods in order.goods_order %}
+                        <div class="order-composition">
+                            <div class="order-name">
+                                <span class="info">Заказ:</span><span> {{ goods.goods.title }}</span>
+                            </div>
+                            <div class="order-additional">
+                                <span class="info">Дополнения:</span>
+                                <ul class="additional-list">
+                                    {% for ingridient in goods.ingridient_orders %}
+                                        <li>{{ ingridient.ingridient.title }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
         {% endfor %}

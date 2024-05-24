@@ -32,7 +32,8 @@ def index(role):
             return render_template("courier/index.html", orders=orders, activer_orders=active_orders)
         case "manager":
             orders_in_processing = Order.query.filter(Order.status == "in processing").all()
-            return render_template("manager/index.html", orders_in_processing=orders_in_processing)
+            orders_others = Order.query.filter(Order.status != "in processing").all()
+            return render_template("manager/index.html", orders_in_processing=orders_in_processing, orders_others=orders_others)
         case "admin":
             managers = User.query.filter(User.role == "manager").all()
             couriers = User.query.filter(User.role == "courier").all()
@@ -68,6 +69,8 @@ def create_entity(entity):
                     price=request.form['price']
                     )
                 new_order_id = Order.create(new_order)
+
+                User_Order.create(User_Order(user_id=current_user.id, order_id=new_order_id))
                 for goods in goodses:
                     new_goods_order = Goods_Order(
                         goods_id=goods['goods'], 
@@ -117,13 +120,14 @@ def ingridient(ingridient_id):
     ingridient = Ingridient.query.filter_by(id=ingridient_id).first()
     return jsonify({"title": ingridient.title}), 200
 
-@app.route("/order/update/<int:order_id>")
+@app.route("/order/update/<int:order_id>", methods=["POST"])
 @login_required
 def orders_update_status(order_id):
     old_order = Order.query.filter_by(id=order_id).first()
     if request.method == "POST":
         new_order = Order(
-            delivery_address=old_order.delivery_address, 
+            delivery_to_address=old_order.delivery_to_address,
+            delivery_from_address=old_order.delivery_from_address,
             delivery_date=old_order.delivery_date,
             status=request.form['status'], 
             comment=old_order.comment, 
@@ -134,7 +138,7 @@ def orders_update_status(order_id):
 
 @app.route("/order/update/courier/<int:order_id>")
 @login_required
-def orders_give_courier_id(order_id):
+def orders_get_courier_id(order_id):
     if request.method == "POST":
         new_user_order = User_Order(
             user_id=current_user.id,
@@ -161,35 +165,36 @@ def orders_give_courier_id(order_id):
 
 # ==entity update/delete==
 
-@app.route("/<string:entity>/<string:action>/<int:entity_id>", methods=['GET', 'POST'])
+@app.route("/goods/<string:action>/<int:goods_id>")
 @login_required
-def entity_actions(entity, action, entity_id):
-    match entity:
-        case "goods":
-            match action:
-                case "update":
-                    old_goods = Goods.query.filter_by(id=entity_id).first()
-                    if request.method == "POST":
-                        new_goods = Goods(title=request.form['title'], photo_URL=request.form['image-url'],
-                            description=request.form['description'], price=request.form['price'], )
-                        Goods.update(old_goods, new_goods)
-                        return redirect('/manager/goods')
-                    return render_template("manager/good-form.html", goods=old_goods)
-                case "delete":
-                    Goods.delete(entity_id)
-                    return jsonify({"message": "Блюдо успешно удалено"}), 200
-        case "ingridient":
-            match action:
-                case "update":
-                    old_ings = Ingridient.query.filter_by(id=entity_id).first()
-                    if request.method == "POST":
-                        new_ings = Ingridient(title=request.form['title'], goods_id=old_ings.goods_id)
-                        Ingridient.update(old_ings, new_ings)
-                        return redirect(f"/goods/update/{old_ings.goods_id}")
-                    return render_template("manager/ingridients-form.html", ingridient=old_ings)
-                case "delete":
-                    Ingridient.delete(entity_id)
-                    return jsonify({"message": "Ингредиент успешно удален"}), 200
+def goods_actions(action, goods_id):
+    match action:
+        case "update":
+            old_goods = Goods.query.filter_by(id=goods_id).first()
+            if request.method == "POST":
+                new_goods = Goods(title=request.form['title'], photo_URL=request.form['image-url'],
+                                  description=request.form['description'], price=request.form['price'], )
+                Goods.update(old_goods, new_goods)
+                return redirect('/manager/goods')
+            return render_template("manager/good-form.html", goods=old_goods)
+        case "delete":
+            Goods.delete(goods_id)
+            return jsonify({"message": "Блюдо успешно удалено"}), 200
+
+@app.route("/ingridient/<string:action>/<int:ingridient_id>")
+@login_required
+def ingridiend_actions(action, ingridient_id):
+    match action:
+        case "update":
+            old_ings = Ingridient.query.filter_by(id=ingridient_id).first()
+            if request.method == "POST":
+                new_ings = Ingridient(title=request.form['title'], goods_id=old_ings.goods_id)
+                Ingridient.update(old_ings, new_ings)
+                return redirect(f"/goods/update/{old_ings.goods_id}")
+            return render_template("manager/ingridients-form.html", ingridient=old_ings)
+        case "delete":
+            Ingridient.delete(ingridient_id)
+            return jsonify({"message": "Ингредиент успешно удален"}), 200
 
 #  ==Users crud==
 

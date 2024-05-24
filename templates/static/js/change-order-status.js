@@ -1,6 +1,6 @@
 $(document).ready(() => {
     $('.order-upworked button').click((e) => {
-        let id = $(e.target).attr("id")
+        let id = e.target.id
         $.ajax({
             method: "POST",
             dataType: "html",
@@ -16,7 +16,7 @@ $(document).ready(() => {
     })
 
     $('input.on-kitchen').click((e) => {
-        let id = $(e.target).attr("id")
+        let id = e.target.id
         $.ajax({
             method: "POST",
             dataType: "html",
@@ -33,7 +33,7 @@ $(document).ready(() => {
     })
 
     $('input.wait-courier').click((e) => {
-        let id = $(e.target).attr("id")
+        let id = e.target.id
         $.ajax({
             method: "POST",
             dataType: "html",
@@ -50,7 +50,7 @@ $(document).ready(() => {
     })
 
     $('input.in-deliver').click((e) => {
-        let id = $(e.target).attr("id")
+        let id = e.target.id
         $.ajax({
             method: "POST",
             dataType: "html",
@@ -65,7 +65,7 @@ $(document).ready(() => {
     })
 
     $('.in-deliver button').click((e) => {
-        let id = $(e.target).attr("id")
+        let id = e.target.id
         $.ajax({
             method: "POST",
             dataType: "html",
@@ -79,7 +79,7 @@ $(document).ready(() => {
         })
     })
     $('.delivered button').click((e) => {
-        let id = $(e.target).attr("id")
+        let id = e.target.id
         $.ajax({
             method: "POST",
             dataType: "html",
