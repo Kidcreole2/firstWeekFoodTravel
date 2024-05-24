@@ -37,7 +37,7 @@
             <ul class="orders-list">
                 {% for order in orders_on_kitchen %}
                     <li id="order_{{ order.id }}" class="orders-item row row-cols-2">
-                        <a href="order-data">Заказ №{% order.id %}</a>
+                        <a href="order-data">Заказ № {{ order.id }}</a>
                         <input type="button"
                                id="{{ order.id }}"
                                class="button-small wait-courier"
