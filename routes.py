@@ -21,14 +21,14 @@ def index(role):
     match role:
         case "kitchen":
             orders_on_kitchen = Order.query.filter_by(status="on kitchen").all()
-            orders_wait_kitchen = Order.query.filter_by(status="waitiing kitchen").all()
+            orders_wait_kitchen = Order.query.filter_by(status="waiting kitchen").all()
             orders_wait_courier = Order.query.filter_by(status="wait courier").all()
             return render_template("kitchen/index.html", orders_wait_kitchen=orders_wait_kitchen,
                                    orders_on_kitchen=orders_on_kitchen, orders_wait_courier=orders_wait_courier)
         case "courier":
-            orders = User_Order.query.filter(User_Order.status == "waiting courier").all()
-            active_orders = User_Order.query.filter(User_Order.has(User_Order.user_id == current_user.id),
-                                                      User_Order.users.has(User.status == "on the way")).all()
+            orders = User_Order.query.filter(User_Order.order.has(Order.status == "in deliver")).all()
+            active_orders = User_Order.query.filter(User_Order.user_id == current_user.id,
+                                                      User_Order.order.has(Order.status == "on the way")).all()
             return render_template("courier/index.html", orders=orders, activer_orders=active_orders)
         case "manager":
             orders_in_processing = Order.query.filter(Order.status == "in processing").all()
