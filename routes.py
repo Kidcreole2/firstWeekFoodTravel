@@ -21,7 +21,7 @@ def index(role):
     match role:
         case "kitchen":
             orders_on_kitchen = Order.query.filter_by(status="on kitchen").all()
-            orders_wait_kitchen = Order.query.filter_by(status="waiting kitchen").all()
+            orders_wait_kitchen = Order.query.filter_by(status="waitiing kitchen").all()
             orders_wait_courier = Order.query.filter_by(status="waiting courier").all()
             return render_template("kitchen/index.html", orders_wait_kitchen=orders_wait_kitchen,
                                    orders_on_kitchen=orders_on_kitchen, orders_wait_courier=orders_wait_courier)
