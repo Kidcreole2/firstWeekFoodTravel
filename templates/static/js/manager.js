@@ -4,5 +4,6 @@ $(document).ready(() => {
     $("h4.check").click((e) => {
         let id = e.target.id
         $(`#order-info_${id}`).toggle(250)
+        $(`h4#${id}`).toggleClass("active")
     })
 })

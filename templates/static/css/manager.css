@@ -31,3 +31,12 @@
   flex-direction: column;
   gap: 30px;
 }
+
+.check {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.check.active {
+  text-decoration: none;
+}
