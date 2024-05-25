@@ -6,7 +6,7 @@ $(document).ready(() => {
             dataType: "html",
             url: `/order/update/${id}`,
             data: {
-                status: "waitiing kitchen"
+                status: "waiting kitchen"
             },
             success: () => {
                 alert("Успешно отправлено на кухню")

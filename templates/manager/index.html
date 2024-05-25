@@ -50,7 +50,7 @@
                             <div class="order-additional">
                                 <span class="info">Дополнения:</span>
                                 <ul class="additional-list">
-                                    {% for ingridient in goods.ingridient_orders %}
+                                    {% for ingridient in goods.ingridient_order %}
                                         <li>{{ ingridient.ingridient.title }}</li>
                                     {% endfor %}
                                 </ul>
@@ -67,16 +67,17 @@
         <h2>Обработанные заказы</h2>
         {% for order in orders_others %}
             <div id="order_{{ order.id }}" class="order">
-                <h3>Заказ №{{ order.id }}</h3>
+                <h3 >Заказ №{{ order.id }}</h3>
                 {% for user in order.user_order %}
-                    {% if user.user.role == "client" %}
+                    {% if 'client' == user.user.role %}
                         <div class="user-phone">
                             <span class="info">Номер клиента:</span>
                             <a href="tel:{{ user.user.phone_number }}">{{ user.user.phone_number }}</a>
                         </div>
                     {% endif %}
                 {% endfor %}
-                <div class="order-info">
+                <h4 id="{{ order.id }}" class="check">Чек</h4>
+                <div id="order-info_{{ order.id }}" class="order-info">
                     {% for goods in order.goods_order %}
                         <div class="order-composition">
                             <div class="order-name">
@@ -85,7 +86,7 @@
                             <div class="order-additional">
                                 <span class="info">Дополнения:</span>
                                 <ul class="additional-list">
-                                    {% for ingridient in goods.ingridient_orders %}
+                                    {% for ingridient in goods.ingridient_order %}
                                         <li>{{ ingridient.ingridient.title }}</li>
                                     {% endfor %}
                                 </ul>
@@ -100,4 +101,5 @@
 
 {% block script %}
     <script src="{{ url_for('static', filename='js/change-order-status.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/manager.js') }}"></script>
 {% endblock %}
