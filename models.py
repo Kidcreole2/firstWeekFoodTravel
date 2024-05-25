@@ -224,8 +224,8 @@ class User_Order(db.Model):
         
     @staticmethod
     def create(user_order):
-            db.session.add(user_order)
-            db.session.commit()
+        db.session.add(user_order)
+        db.session.commit()
             
     @staticmethod
     def delete_by_user(user_id):

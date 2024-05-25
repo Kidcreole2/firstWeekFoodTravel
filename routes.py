@@ -69,8 +69,8 @@ def create_entity(entity):
                     price=request.form['price']
                     )
                 new_order_id = Order.create(new_order)
-
-                User_Order.create(User_Order(user_id=current_user.id, order_id=new_order_id))
+                new_user_order = User_Order(user_id=current_user.id, order_id=new_order_id)
+                User_Order.create(new_user_order)
                 for goods in goodses:
                     new_goods_order = Goods_Order(
                         goods_id=goods['goods'], 
