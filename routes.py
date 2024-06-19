@@ -28,7 +28,7 @@ def index(role):
         case "courier":
             orders = User_Order.query.filter(User_Order.order.has(Order.status == "in deliver")).all()
             active_orders = User_Order.query.filter(User_Order.user_id == current_user.id,
-                                                      User_Order.order.has(Order.status == "on the way")).all()
+                                                      User_Order.order.has(Order.status == "wait courier")).all()
             return render_template("courier/index.html", orders=orders, activer_orders=active_orders)
         case "manager":
             orders_in_processing = Order.query.filter(Order.status == "in processing").all()
