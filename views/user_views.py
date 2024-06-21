@@ -1,8 +1,9 @@
 from core import app
-from flask import render_template, request, jsonify
+from flask import render_template, request, jsonify, redirect, flush
 from flask_login import login_required, current_user
 from models import *
 from datetime import datetime as date
+import pprint
 import json
 
 
@@ -45,17 +46,22 @@ def init_user_views():
     @app.route("/registration", methods=["GET", "POST"])
     def sign_up():
         if request.method == "POST":
-            user = User(
-                lastname=request.form["lastname"],
-                firstname=request.form["firstname"],
-                surname=request.form["surname"],
-                login=request.form["login"],
-                password=request.form["password"],
-                role="client",
-                phone_number=request.form["phone"],
-            )
-            pprint.pprint(User.create(user))
-            return redirect("/")
+            c_hash = request.form.get('captcha-hash')
+            c_text = request.form.get('captcha-text')
+            if SIMPLE_CAPTCHA.verify(c_text, c_hash):
+                user = User(
+                    lastname=request.form["lastname"],
+                    firstname=request.form["firstname"],
+                    surname=request.form["surname"],
+                    login=request.form["login"],
+                    password=request.form["password"],
+                    role="client",
+                    phone_number=request.form["phone"],
+                )
+                pprint.pprint(User.create(user))
+                return redirect("/")
+            else: 
+                return flush("wrong captcha")
         return render_template("registrate.html")
     
     @app.route('/orders', methods=['GET'])

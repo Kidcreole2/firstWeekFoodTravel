@@ -4,14 +4,22 @@ from flask import (
     request,
     render_template,
     redirect,
-    url_for,
-    flash,
-    get_flashed_messages,
+    flush,
     jsonify,
 )
+from flask_simple_captcha import CAPTCHA
 from flask_login import logout_user, current_user, login_required
 from core import app, login_manager
 from models import *
+
+YOUR_CONFIG = {
+    'SECRET_CAPTCHA_KEY': 'LONG_KEY',
+    'CAPTCHA_LENGTH': 6,
+    'CAPTCHA_DIGITS': False,
+    'EXPIRE_SECONDS': 600,
+}
+SIMPLE_CAPTCHA = CAPTCHA(config=YOUR_CONFIG)
+app = SIMPLE_CAPTCHA.init_app(app)
 
 
 @login_manager.user_loader
@@ -67,17 +75,28 @@ def logout():
 
 
 
-
+@app.route('/captcha/get', methods=['GET'])
+def captcha_get():
+    if request.method == 'GET':
+        new_captcha_dict = SIMPLE_CAPTCHA.create()
+        return new_captcha_dict
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        login = request.form["login"]
-        print(login)
-        password = request.form.get("password")
-        roles = User.auth_user(login, password)
-        pprint.pprint(roles)
-        return redirect("/")
+        c_hash = request.form.get('captcha-hash')
+        c_text = request.form.get('captcha-text')
+        if SIMPLE_CAPTCHA.verify(c_text, c_hash):
+            login = request.form["login"]
+            print(login)
+            password = request.form.get("password")
+            roles = User.auth_user(login, password)
+            pprint.pprint(roles)
+            c_hash = request.form.get('captcha-hash')
+            c_text = request.form.get('captcha-text')
+            return redirect("/")
+        else:
+            return flush("wrong captcha") 
     return render_template("login.html")
 
 
