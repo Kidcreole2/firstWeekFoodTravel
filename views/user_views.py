@@ -61,10 +61,11 @@ def init_user_views():
                 pprint.pprint(User.create(user))
                 return redirect("/")
             else: 
-                return flash("wrong captcha")
+                return flash("неправильная каптча")
             
         messages = get_flashed_messages()
-        return render_template("registrate.html", messages=messages)
+        new_captcha_dict = SIMPLE_CAPTCHA.create()
+        return render_template("registrate.html", messages=messages, captcha=new_captcha_dict)
     
     @app.route('/orders', methods=['GET'])
     @login_required

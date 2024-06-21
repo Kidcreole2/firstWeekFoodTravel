@@ -51,10 +51,10 @@
         <label for="password-confirm">Подтвердите</label>
         <input type="password" name="password-confirm" placeholder="....." id="password-confirm" />
       </div>
-
+      {{ captcha_html(captcha)|safe }}
       <div class="form-buttons">
-        <button type="submit">Зарегестрироваться</button>
-        <a class="button" target="" rel="noopener noreferrer">Войти</a>
+        <button class="button" type="submit">Зарегестрироваться</button>
+        <a class="button" href="/" rel="noopener noreferrer">Войти</a>
       </div>
     </form>
   </div>

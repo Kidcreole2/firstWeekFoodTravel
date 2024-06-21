@@ -73,24 +73,21 @@ def captcha_get():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    if request.method == 'GET':
-        new_captcha_dict = SIMPLE_CAPTCHA.create()
-        return new_captcha_dict
     if request.method == "POST":
         c_hash = request.form.get('captcha-hash')
         c_text = request.form.get('captcha-text')
         if SIMPLE_CAPTCHA.verify(c_text, c_hash):
             login = request.form["login"]
-            print(login)
             password = request.form.get("password")
             roles = User.auth_user(login, password)
-            flash("wrong password/login")
+            flash("Не правильный логин или пароль")
             pprint.pprint(roles)
             return redirect("/")
         else:
-            flash("wrong captcha")  
+            flash("Неправильная каптча")
     messages = get_flashed_messages()
-    return render_template("login.html", messages=messages)
+    new_captcha_dict = SIMPLE_CAPTCHA.create()
+    return render_template("login.html", messages=messages, captcha=new_captcha_dict)
 
 
 @app.route("/", methods=["GET", "POST"])
