@@ -5,21 +5,13 @@ from flask import (
     render_template,
     redirect,
     flush,
+    get_flushed_messages,
     jsonify,
 )
 from flask_simple_captcha import CAPTCHA
 from flask_login import logout_user, current_user, login_required
-from core import app, login_manager
+from core import app, login_manager, SIMPLE_CAPTCHA
 from models import *
-
-YOUR_CONFIG = {
-    'SECRET_CAPTCHA_KEY': 'LONG_KEY',
-    'CAPTCHA_LENGTH': 6,
-    'CAPTCHA_DIGITS': False,
-    'EXPIRE_SECONDS': 600,
-}
-SIMPLE_CAPTCHA = CAPTCHA(config=YOUR_CONFIG)
-app = SIMPLE_CAPTCHA.init_app(app)
 
 
 @login_manager.user_loader
@@ -96,8 +88,9 @@ def login():
             c_text = request.form.get('captcha-text')
             return redirect("/")
         else:
-            return flush("wrong captcha") 
-    return render_template("login.html")
+            flush("wrong captcha")  
+    messages = get_flushed_messages()
+    return render_template("login.html", messages=messages)
 
 
 @app.route("/", methods=["GET", "POST"])
