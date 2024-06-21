@@ -1,5 +1,5 @@
 from core import app
-from flask import render_template, request, jsonify, redirect, flush
+from flask import render_template, request, jsonify, redirect, flash, get_flashed_messages
 from flask_login import login_required, current_user
 from models import *
 from datetime import datetime as date
@@ -61,8 +61,10 @@ def init_user_views():
                 pprint.pprint(User.create(user))
                 return redirect("/")
             else: 
-                return flush("wrong captcha")
-        return render_template("registrate.html")
+                return flash("wrong captcha")
+            
+        messages = get_flashed_messages()
+        return render_template("registrate.html", messages=messages)
     
     @app.route('/orders', methods=['GET'])
     @login_required

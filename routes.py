@@ -4,8 +4,8 @@ from flask import (
     request,
     render_template,
     redirect,
-    flush,
-    get_flushed_messages,
+    flash,
+    get_flashed_messages,
     jsonify,
 )
 from flask_simple_captcha import CAPTCHA
@@ -88,8 +88,8 @@ def login():
             c_text = request.form.get('captcha-text')
             return redirect("/")
         else:
-            flush("wrong captcha")  
-    messages = get_flushed_messages()
+            flash("wrong captcha")  
+    messages = get_flashed_messages()
     return render_template("login.html", messages=messages)
 
 
