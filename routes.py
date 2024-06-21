@@ -19,26 +19,27 @@ def loader_user(user_id):
 @login_required
 def index(role):
     match role:
-        case "kitchen":
-            orders_on_kitchen = Order.query.filter_by(status="on kitchen").all()
-            orders_wait_kitchen = Order.query.filter_by(status="waiting kitchen").all()
-            orders_wait_courier = Order.query.filter_by(status="wait courier").all()
-            return render_template("kitchen/index.html", orders_wait_kitchen=orders_wait_kitchen,
-                                   orders_on_kitchen=orders_on_kitchen, orders_wait_courier=orders_wait_courier)
         case "courier":
-            orders = User_Order.query.filter(User_Order.order.has(Order.status == "in deliver")).all()
+            orders = User_Order.query.filter(User_Order.order.has(Order.status == "wait courier")).all()
             active_orders = User_Order.query.filter(User_Order.user_id == current_user.id,
                                                       User_Order.order.has(Order.status == "on the way")).all()
             return render_template("courier/index.html", orders=orders, activer_orders=active_orders)
         case "manager":
             orders_in_processing = Order.query.filter(Order.status == "in processing").all()
-            orders_others = Order.query.filter(Order.status != "in processing").all()
-            return render_template("manager/index.html", orders_in_processing=orders_in_processing, orders_others=orders_others)
+            orders_closed = Order.query.filter(Order.status == "delivered", Order.status == "deprecated").all()
+            orders_others = Order.query.filter(Order.status != "in processing", Order.status != "deprecated",Order.status != "delivered").all()
+            return render_template("manager/index.html", orders_in_processing=orders_in_processing, orders_others=orders_others, orders_closed=orders_closed)
         case "admin":
             managers = User.query.filter(User.role == "manager").all()
             couriers = User.query.filter(User.role == "courier").all()
             kitchen = User.query.filter(User.role == "kitchen").all()
             return render_template("admin/index.html", managers=managers, couriers=couriers, kitchens=kitchen)
+        
+@app.route("/index/kitchen/<string:status>")
+@login_required
+def index(status):
+        orders = Order.query.filter_by(status=status).all()
+        return render_template("kitchen/index.html", orders=orders)
 
 @app.route('/manager/goods', methods=['GET'])
 @login_required
