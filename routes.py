@@ -41,9 +41,6 @@ def index(role):
             kitchen = User.query.filter(User.role == "kitchen").all()
             return render_template("admin/index.html", managers=managers, couriers=couriers, kitchens=kitchen)
         
-@app.route("/index/kitchen/<string:state>")
-@login_required
-def index(role):
 
 @app.route('/manager/goods', methods=['GET'])
 @login_required
