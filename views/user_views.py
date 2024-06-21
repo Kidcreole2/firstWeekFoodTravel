@@ -1,4 +1,4 @@
-from core import app
+from core import app, SIMPLE_CAPTCHA
 from flask import render_template, request, jsonify, redirect, flash, get_flashed_messages
 from flask_login import login_required, current_user
 from models import *
