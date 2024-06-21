@@ -16,3 +16,18 @@ def init_kitchen_views():
             orders_on_kitchen=orders_on_kitchen,
             orders_wait_courier=orders_wait_courier,
         )
+
+    @app.route("/order/list")
+    @login_required
+    def orders_list():
+        orders_list = Order.query.all()
+        return render_template("", orders_list=orders_list)
+        
+            
+    # --order get--
+
+    @app.route("/order/get/<int:order_id>")
+    @login_required
+    def orders_give_courier_id(order_id):
+        order = Order.query.filter_by(id=order_id).first()
+        return render_template("kitchen/order_page.html", order=order)
