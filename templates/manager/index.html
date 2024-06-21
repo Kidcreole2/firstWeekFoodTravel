@@ -92,6 +92,11 @@
                     {% set status = 'Доставлен' %}
                 {% endif %}
                 <span class="info">Статус: {{ status }}</span>
+                {% if order.status != 'deprecated' %}
+                    <div class="order-deprecated">
+                        <button id="{{ order.id }}" class="button">Отменить заказ</button>
+                    </div>
+                {% endif %}
                 {% for user in order.user_order %}
                     {% if user.user.role == 'client' %}
                         <div class="user-phone">
