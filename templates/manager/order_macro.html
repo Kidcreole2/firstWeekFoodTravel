@@ -1,0 +1,57 @@
+{% from 'status_macro.html' import order_status %}
+
+{% macro order_macro(order, user_role) %}
+  <div id="order_{{ order.id }}" class="order">
+    <h3>Заказ №{{ order.id }}</h3>
+    {{ order_status(order.status) }}
+    <div class="price">{{ order.price }}</div>
+    {% if user_role == 'manager' %}
+      {% for user in order.user_order %}
+        {% if user.user.role == 'client' %}
+          <div class="user-phone">
+            <div class="user-phone">
+              <span class="info">Имя клиента:</span>
+              <span>{{ user.user.lastname }} {{ user.user.firstname }}</span>
+            </div>
+            <div class="user-phone">
+              <span class="info">Номер клиента:</span>
+              <a href="tel:{{ user.user.phone_number }}">{{ user.user.phone_number }}</a>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+    <div id="{{ order.id }}" class="order-others">Состав заказа</div>
+    <div class="order-info" data-order-id="{{ order.id }}">
+      {% for goods in order.goods_order %}
+        <div class="order-composition">
+          <div class="order-name">
+            <span class="info">Заказ:</span><span>{{ goods.goods.title }}</span>
+          </div>
+          <div class="order-additional">
+            <span class="info">Дополнения:</span>
+            <ul class="additional-list">
+              {% for ingridient in goods.ingridient_order %}
+                <li>{{ ingridient.ingridient.title }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if user_role == 'manager' %}
+      {% if order.status == 'in processing' %}
+        <div class="order-upworked">
+          <button id="{{ order.id }}" class="button">Отправить заказ на кухню</button>
+        </div>
+      {% endif %}
+
+      {% if order.status != 'deprecated' %}
+        <div class="order-deprecated">
+          <button id="{{ order.id }}" class="button">Отменить заказ</button>
+        </div>
+      {% endif %}
+    {% endif %}
+  </div>
+{% endmacro %}

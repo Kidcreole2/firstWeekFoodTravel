@@ -11,6 +11,7 @@ $(document).ready(() => {
             success: () => {
                 alert("Успешно отправлено на кухню")
                 $(`#order_${id}`).hide(50)
+                window.location.reload()
             }
         })
     })
@@ -25,8 +26,9 @@ $(document).ready(() => {
                 status: "deprecated"
             },
             success: () => {
-                alert("Успешно отправлено на кухню")
+                alert("Заказ отменен")
                 $(`#order_${id}`).hide(50)
+                window.location.reload()
             }
         })
     })
@@ -44,6 +46,7 @@ $(document).ready(() => {
                 let order = $(`#order_${id}`)
                 $(`order_${id}`).remove()
                 $('.in-progress ul').append(order)
+                window.location.reload()
             }
         })
     })
@@ -61,6 +64,7 @@ $(document).ready(() => {
                 let order = $(`#order_${id}`)
                 $(`order_${id}`).hide(20).remove()
                 $('div.wait-courier ul.orders-list').append(order)
+                window.location.reload()
             }
         })
     })
@@ -76,11 +80,12 @@ $(document).ready(() => {
             },
             success: () => {
                 $(`order_${id}`).hide(20).remove()
+                window.location.reload()
             }
         })
     })
 
-    $('.in-deliver button').click((e) => {
+    $('.in-delivery button').click((e) => {
         let id = e.target.id
         $.ajax({
             method: "POST",
@@ -91,6 +96,7 @@ $(document).ready(() => {
             },
             success: () => {
                 $(`order_${id}`).hide(20).remove()
+                window.location.reload()
             }
         })
     })
@@ -105,6 +111,8 @@ $(document).ready(() => {
             },
             success: () => {
                 $(`order_${id}`).hide(20).remove()
+                alert("Заказ доставлен")
+                window.location.reload()
             }
         })
     })

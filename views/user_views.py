@@ -57,3 +57,16 @@ def init_user_views():
             pprint.pprint(User.create(user))
             return redirect("/")
         return render_template("registrate.html")
+    
+    @app.route('/orders', methods=['GET'])
+    @login_required
+    def user_orders():
+        orders = current_user.user_order
+        active_orders = []
+        inactive_orders = []
+        for order in orders:
+            if order.order.status != 'deprecated' and order.order.status != 'delivered':
+                active_orders.append(order.order)
+            else: 
+                inactive_orders.append(order.order)
+        return render_template('orders-list.html', active_orders=active_orders, completed_orders=inactive_orders)

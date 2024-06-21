@@ -3,69 +3,87 @@
 {% from 'admin/admin-header.html' import admin_logo, admin_nav %}
 
 {% block styles %}
-    <link rel="stylesheet" href=" {{ url_for('static', filename='css/courier.css') }} "/>
-    <link rel="stylesheet" href=" {{ url_for('static', filename='css/manager.css') }} "/>
+  <link rel="stylesheet" href=" {{ url_for('static', filename='css/courier.css') }} " />
+  <link rel="stylesheet" href=" {{ url_for('static', filename='css/manager.css') }} " />
 {% endblock %}
 
 {% block logo %}
-    {{ admin_logo() }}
+  {{ admin_logo() }}
 {% endblock %}
 
 {% block nav %}
-    {{ admin_nav() }}
+  {{ admin_nav() }}
 {% endblock %}
 
 {% block content %}
-    <div class="orders">
-        <div class="active-orders">
-            <h2>Доставка в работе</h2>
-            {% for order in activer_orders %}
-                <div id="order_{{ order.id }}" class="order">
-                    <h3>Заказ №{{ order.order.id }}</h3>
-                    <div class="user-phone">
-                        <span class="info">Номер клиента:</span>
-                        <a href="tel:+78005553535">{{ order.users.phone_number }}</a>
-                    </div>
-                    <div class="order-info">
-                        <div class="from-address">
-                            <span class="info">Откуда:</span> {{ order.order.delivery_from_address }}
-                        </div>
-                        <div class="to-address">
-                            <span class="info">Куда:</span> {{ order.order.delivery_to_address }}
-                        </div>
-                    </div>
-                    <div class="delivered">
-                        <button id="{{ order.id }}" class="button">Доставлено</button>
-                    </div>
-                </div>
-            {% endfor %}
+  <div class="orders">
+    <div class="active-orders">
+      <h2>Доставка в работе</h2>
+      {% if active_orders %}
+      {% for order in active_orders %}
+        <div id="order_{{ order.id }}" class="order">
+          <h3>Заказ №{{ order.order.id }}</h3>
+          <div class="order-info">
+            <div class="user-phone">
+              <span class="info">Номер клиента:</span>
+              {% for uo in order.order.user_order %}
+                {% if uo.user.role == 'client' %}
+                  <a href="tel:{{ uo.user.phone_number }}">{{ uo.user.phone_number }}</a>
+                {% endif %}
+              {% endfor %}
+            </div>
+            <div class="from-address">
+              <span class="info">Откуда:</span> {{ order.order.delivery_from_address }}
+            </div>
+            <div class="to-address">
+              <span class="info">Куда:</span> {{ order.order.delivery_to_address }}
+            </div>
+          </div>
+          {% if order.order.status == 'in deliver' %}
+            <div class="delivered">
+              <button id="{{ order.order.id }}" class="button">Доставлено</button>
+            </div>
+          {% endif %}
         </div>
-        <div  class="inactive-orders">
-            <h2>Ожидет курьера</h2>
-            {% for order in orders %}
-                <div id="order_{{ order.id }}" class="order">
-                    <h3>Заказ № {{ order.order.id }}</h3>
-                    <div class="order-info">
-                        <div class="user-phone">
-                            <span class="info">Номер клиента:</span>
-                            <a href="tel:+78005553535">{{ order.user.phone_number }}</a>
-                        </div>
-                        <div class="from-address">
-                            <span class="info">Откуда:</span> {{ order.order.delivery_from_address }}
-                        </div>
-                        <div class="to-address">
-                            <span class="info">Куда:</span> {{ order.order.delivery_to_address }}
-                        </div>
-                    </div>
-                    <div class="in-delivery">
-                        <button id="{{ order.id }}" class="button">Взять в работу</button>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
+      {% endfor %}
+      {% else %}
+        <p>Упс тут пока что ничего неть</p>
+      {% endif %}
     </div>
+    <div class="inactive-orders">
+      <h2>Ожидет курьера</h2>
+      {% if orders %}
+      {% for order in orders %}
+        <div id="order_{{ order.id }}" class="order">
+          <h3>Заказ № {{ order.id }}</h3>
+          <div class="order-info">
+            <div class="user-phone">
+              <span class="info">Номер клиента:</span>
+              {% for uo in order.user_order %}
+                {% if uo.user.role == 'client' %}
+                  <a href="tel:{{ uo.user.phone_number }}">{{ uo.user.phone_number }}</a>
+                {% endif %}
+              {% endfor %}
+            </div>
+            <div class="from-address">
+              <span class="info">Откуда:</span> {{ order.delivery_from_address }}
+            </div>
+            <div class="to-address">
+              <span class="info">Куда:</span> {{ order.delivery_to_address }}
+            </div>
+          </div>
+          <div class="in-delivery">
+            <button id="{{ order.id }}" class="button">Взять в работу</button>
+          </div>
+        </div>
+      {% endfor %}
+      {% else %}
+        <p>Упс тут пока что ничего неть</p>
+      {% endif %}
+    </div>
+  </div>
 {% endblock %}
 
 {% block script %}
-    <script src="{{ url_for('static', filename='js/change-order-status.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/change-order-status.js') }}"></script>
 {% endblock %}

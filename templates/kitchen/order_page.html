@@ -3,11 +3,11 @@
 {% from 'admin/admin-header.html' import admin_logo, admin_nav %}
 
 {% block styles %}
-    <link rel="stylesheet" href="{{ url_for('static', 'css/order-page.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/order-page.css') }}"/>
 {% endblock %}
 
 {% block logo %}
-    {{ admin_logo }}
+    {{ admin_logo() }}
 {% endblock %}
 
 {% block nav %}
@@ -19,25 +19,29 @@
 {% endblock %}
 
 {% block content %}
-    <a href="/templates/kitchen/index.html">Вернуться</a>
+    <a class="button" href="/">Вернуться</a>
     <div class="order">
         <div class="order-number">
             <h1>Заказ № {{ order.id }}</h1>
         </div>
+        <div class="order-info">
+            <div class="price">Цена: {{ order.price }}</div>
+        </div>
         <div class="order-composition">
             <h3>Состав:</h3>
             <ul class="composition-list">
-                {% for goods_order in order.goods_orders %}
+                {% for goods_order in order.goods_order %}
                 <li class="composition-item">
-
+                    
                     <span>{{ goods_order.goods.title }}</span>
                     <span>Дополнения</span>
                     <ul>
-                        {% for ingridient in goods_order.goods.ingridients %}
-                            <li>{% ingridient.title %}</li>
+                        {% for ingridient in goods_order.ingridient_order %}
+                            <li>{{ ingridient.ingridient.title }}</li>
                         {% endfor %}
                     </ul>
                 </li>
+                {% endfor %}
             </ul>
         </div>
     </div>

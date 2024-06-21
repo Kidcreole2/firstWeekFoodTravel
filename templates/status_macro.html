@@ -1,0 +1,16 @@
+{% macro order_status(status) %}
+  {% if status == 'wait courier' %}
+    {% set status = 'Ожидает курьера' %}
+  {% elif status == 'deprecated' %}
+    {% set status = 'Отменен' %}
+  {% elif status == 'in processing' %}
+    {% set status = 'В обработке' %}
+  {% elif status == 'waiting kitchen' %}
+    {% set status = 'Отправлен на кухню' %}
+  {% elif status == 'on kitchen' %}
+    {% set status = 'Готовится' %}
+  {% elif status == 'delivered' %}
+    {% set status = 'Доставлен' %}
+  {% endif %}
+  <div class="orders-status">{{ status }}</div>
+{% endmacro %}

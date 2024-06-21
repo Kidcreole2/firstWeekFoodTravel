@@ -1,83 +1,48 @@
-{% extends "base_login.html" %}
+{% extends 'base_login.html' %}
 
 {% block styles %}
-    <link rel="stylesheet" href=" {{ url_for('static', filename='css/login.css') }} "/>
-    <link rel="stylesheet" href=" {{ url_for('static', filename='css/manager.css') }} "/>
+  {# <link rel="stylesheet" href=" {{ url_for('static', filename='css/login.css') }} "/> #}
+  <link rel="stylesheet" href=" {{ url_for('static', filename='css/manager.css') }} " />
+{% endblock %}
+
+{% from 'admin/admin-header.html' import admin_logo %}
+
+{% from 'status_macro.html' import order_status %}
+{% from 'manager/order_macro.html' import order_macro %}
+
+{% block logo %}
+  {{ admin_logo() }}
 {% endblock %}
 
 {% block nav %}
-    <nav class="header__nav">
-        <ul class="nav__ul">
-            <li class="nav__li cart">
-                <i class="bi bi-cart4"></i>
-            </li>
-            <li class="nav__li">
-                <a href="/logout" class="logout nav__a">Выйти</a>
-            </li>
-        </ul>
-    </nav>
+  <nav class="header__nav">
+    <ul class="nav__ul">
+      <li class="nav__li">
+        <a href="/logout" class="logout nav__a">Выйти</a>
+      </li>
+    </ul>
+  </nav>
 {% endblock %}
 
 {% block content %}
-    <div class="active-orders">
-        <h2>Активные заказы</h2>
-        {% for order in active_orders %}
-            <div class="order">
-                <h3>Заказ №{{ order.id }}</h3>
-                <div class="orders-status">{{ order.status }}</div>
-                <div class="price"><span class="info">Стоимость</span> {{ order.price }} </div>
-                <div class="order-info">
-                    {% for goods in order.goods_orders %}
-                        <div class="order-composition">
-                            <div class="order-name">
-                                <span class="info">Заказ:</span><span> {{ goods.goods.title }}</span>
-                            </div>
-                            <div class="order-additional">
-                                <span class="info">Дополнения:</span>
-                                <ul class="additional-list">
-                                    {% for ingridient in goods.ingridient_orders %}
-                                        <li>{{ ingridient.ingridient.title }}</li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
+  <div class="active-orders">
+    <h2>Активные заказы</h2>
+    {% for order in active_orders %}
+      {{ order_macro(order, 'user') }}
+    {% endfor %}
+  </div>
+  <div class="inactive-orders">
+    <h2>Завершенные заказы</h2>
+    {% if completed_orders %}
+      {% for order in completed_orders %}
+        {{ order_macro(order, 'user') }}
+      {% endfor %}
+    {% else %}
+      <p>Ой, тут еще ничего нет, но ничего страшного. Скоро будет))</p>
+    {% endif %}
+  </div>
+{% endblock %}
 
-                <div class="order-upworked">
-                    <button class="button">Отправить заказ на кухню</button>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
-   <div class="active-orders">
-        <h2>Завершенные заказы</h2>
-        {% for order in completed_orders %}
-            <div class="order">
-                <h3>Заказ №{{ order.id }}</h3>
-                <div class="price"><span class="info">Стоимость</span> {{ order.price }} </div>
-                <div class="order-info">
-                    {% for goods in order.goods_orders %}
-                        <div class="order-composition">
-                            <div class="order-name">
-                                <span class="info">Заказ:</span><span> {{ goods.goods.title }}</span>
-                            </div>
-                            <div class="order-additional">
-                                <span class="info">Дополнения:</span>
-                                <ul class="additional-list">
-                                    {% for ingridient in goods.ingridient_orders %}
-                                        <li>{{ ingridient.ingridient.title }}</li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-
-                <div class="order-upworked">
-                    <button id="{{ order.id }}" class="button">Отправить заказ на кухню</button>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
+{% block script %}
+  <script src="{{ url_for('static', filename='js/manager.js') }}"></script>
 {% endblock %}

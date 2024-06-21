@@ -1,6 +1,8 @@
 {% extends 'base_login.html' %}
 
 {% from 'admin/admin-header.html' import admin_logo %}
+{% from 'manager/order_macro.html' import order_macro %}
+
 
 {% block styles %}
 {#    <link rel="stylesheet" href=" {{ url_for('static', filename='css/login.css') }} "/>#}
@@ -31,99 +33,11 @@
     <div class="orders">
         <h2>Необработанные заказы</h2>
         {% for order in orders_in_processing %}
-            <div id="order_{{ order.id }}" class="order">
-                <h3>Заказ №{{ order.id }}</h3>
-                {% for user in order.user_order %}
-                    {% if user.user.role == "client" %}
-                        <div class="user-phone">
-                            <span class="info">Имя клиента:</span>
-                            <span>{{ user.user.lastname }} {{ user.user.firstname }}</span>
-                        </div>
-                        <div class="user-phone">
-                            <span class="info">Номер клиента:</span>
-                            <a href="tel:{{ user.user.phone_number }}">{{ user.user.phone_number }}</a>
-                        </div>
-                        <div id="{{ order.id  }}" class="order-others">
-                            Остальная информация
-                        </div>
-                    {% endif %}
-                {% endfor %}
-                <div class="order-info" data-order-id="{{ order.id  }}">
-                    {% for goods in order.goods_order %}
-                        <div class="order-composition">
-                            <div class="order-name">
-                                <span class="info">Заказ:</span><span> {{ goods.goods.title }}</span>
-                            </div>
-                            <div class="order-additional">
-                                <span class="info">Дополнения:</span>
-                                <ul class="additional-list">
-                                    {% for ingridient in goods.ingridient_order %}
-                                        <li>{{ ingridient.ingridient.title }}</li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-
-                <div class="order-upworked">
-                    <button id="{{ order.id }}" class="button">Отправить заказ на кухню</button>
-                </div>
-                <div class="order-deprecated">
-                    <button id="{{ order.id }}" class="button">Отменить заказ</button>
-                </div>
-            </div>
+            {{ order_macro(order, 'manager') }}
         {% endfor %}
         <h2>Обработанные заказы</h2>
         {% for order in orders_others %}
-            <div id="order_{{ order.id }}" class="order">
-                <h3 >Заказ №{{ order.id }}</h3>
-                {% if order.status == 'wait courier' %}
-                    {% set status = 'Ожидает курьера' %}
-                {% elif order.status == 'deprecated' %}
-                    {% set status = 'Отменен' %}
-                {% elif order.status == 'in processing' %}
-                    {% set status = 'В обработке' %}
-                {% elif order.status == 'waiting kitchen' %}
-                    {% set status = 'Отправлен на кухню' %}
-                {% elif order.status == 'on kitchen' %}
-                    {% set status = 'Готовится' %}
-                {% elif order.status == 'delivered' %}
-                    {% set status = 'Доставлен' %}
-                {% endif %}
-                <span class="info">Статус: {{ status }}</span>
-                {% if order.status != 'deprecated' %}
-                    <div class="order-deprecated">
-                        <button id="{{ order.id }}" class="button">Отменить заказ</button>
-                    </div>
-                {% endif %}
-                {% for user in order.user_order %}
-                    {% if user.user.role == 'client' %}
-                        <div class="user-phone">
-                            <span class="info">Номер клиента:</span>
-                            <a href="tel:{{ user.user.phone_number }}">{{ user.user.phone_number }}</a>
-                        </div>
-                    {% endif %}
-                {% endfor %}
-                <h4 id="{{ order.id }}" class="check">Чек</h4>
-                <div id="order-info_{{ order.id }}" class="order-info">
-                    {% for goods in order.goods_order %}
-                        <div class="order-composition">
-                            <div class="order-name">
-                                <span class="info">Заказ:</span><span> {{ goods.goods.title }}</span>
-                            </div>
-                            <div class="order-additional">
-                                <span class="info">Дополнения:</span>
-                                <ul class="additional-list">
-                                    {% for ingridient in goods.ingridient_order %}
-                                        <li>{{ ingridient.ingridient.title }}</li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
+            {{ order_macro(order, "manager") }}
         {% endfor %}
     </div>
 {% endblock %}

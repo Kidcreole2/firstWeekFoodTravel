@@ -1,7 +1,7 @@
 from core import app
 from flask import render_template, request, redirect, jsonify
 from flask_login import login_required, current_user
-from sqlalchemy import or_
+from sqlalchemy import or_, and_
 from models import *
 from datetime import datetime as date
 
@@ -15,7 +15,7 @@ def init_manager_views():
             or_(Order.status == "delivered", Order.status == "deprecated")
         ).all()
         orders_others = Order.query.filter(
-            or_(
+            and_(
                 Order.status != "in processing",
                 Order.status != "deprecated",
                 Order.status != "delivered",

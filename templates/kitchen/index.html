@@ -3,66 +3,59 @@
 {% from 'admin/admin-header.html' import admin_logo, admin_nav %}
 
 {% block styles %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/kitchen.css') }}"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/kitchen.css') }}" />
 {% endblock %}
 
 {% block logo %}
-    {{ admin_logo() }}
+  {{ admin_logo() }}
 {% endblock %}
 
 {% block nav %}
-    {{ admin_nav() }}
+  {{ admin_nav() }}
 {% endblock %}
 
 {% block content %}
-    <div class="orders-group row row-cols-3 justify-content-center">
-        <div class="orders wait-work">
-            <h2>Ожидание</h2>
-            <ul class="orders-list">
-                {% for order in orders_wait_kitchen %}
-                    <li id="order_{{ order.id }}" class="orders-item row row-cols-2">
-                        <a href="order-data">Заказ №{{ order.id }}</a>
-                        <input
-                                id="{{ order.id }}"
-                                class="button-small on-kitchen"
-                                type="button"
-                                value="Взять в работу"
-                        />
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
-        <div class="in-progress">
-            <h2>В работе</h2>
-            <ul class="orders-list">
-                {% for order in orders_on_kitchen %}
-                    <li id="order_{{ order.id }}" class="orders-item row row-cols-2">
-                        <a href="order-data">Заказ № {{ order.id }}</a>
-                        <input type="button"
-                               id="{{ order.id }}"
-                               class="button-small wait-courier"
-                               value="Приготовлено"/>
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
-        <div class="wait-courier">
-            <h2>Ожидают курьера</h2>
-            <ul class="orders-list">
-                {% for order in orders_wait_courier %}
-                    <li class="orders-item row row-cols-2">
-                        <a href="order-data">Заказ №{{ order.id }}</a>
-                        <input type="button"
-                               id="{{ order.id }}"
-                               class="button-small in-deliver"
-                               value="Забрано курьером"/>
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
+  <div class="orders-group row row-cols-3 justify-content-center">
+    <div class="orders wait-work">
+      <h2>Ожидание</h2>
+      <ul class="orders-list">
+        {% for order in orders_wait_kitchen %}
+          <li id="order_{{ order.id }}" class="orders-item row row-cols-2">
+            <a href="order-data">Заказ №{{ order.id }}</a>
+            <input id="{{ order.id }}" class="button-small on-kitchen" type="button" value="Взять в работу" />
+          </li>
+        {% endfor %}
+      </ul>
     </div>
+    <div class="in-progress">
+      <h2>В работе</h2>
+      <ul class="orders-list">
+        {% for order in orders_on_kitchen %}
+          <li id="order_{{ order.id }}" class="orders-item row row-cols-2">
+            <a href="order-data">Заказ № {{ order.id }}</a>
+            <input type="button" id="{{ order.id }}" class="button-small wait-courier" value="Приготовлено" />
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="wait-courier">
+      <h2>Ожидают курьера</h2>
+      <ul class="orders-list">
+        {% for order in orders_wait_courier %}
+          <li class="orders-item row row-cols-2">
+            <a href="order-data">Заказ №{{ order.id }}</a>
+            {% for user_order in order.user_order %}
+              {% if user_order.user.role == 'courier' %}
+                <input type="button" id="{{ order.id }}" class="button-small in-deliver" value="Забрано курьером" />
+              {% endif %}
+            {% endfor %}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
 {% endblock %}
 
 {% block script %}
-    <script src="{{ url_for('static', filename='js/change-order-status.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/change-order-status.js') }}"></script>
 {% endblock %}
