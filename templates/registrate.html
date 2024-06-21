@@ -7,11 +7,7 @@
 {% endblock %}
 
 {% block logo %}
-  {{ admin_logo() }}
-{% endblock %}
-
-{% block nav %}
-  {{ admin_nav() }}
+  <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="logo" />
 {% endblock %}
 
 {% block content %}
