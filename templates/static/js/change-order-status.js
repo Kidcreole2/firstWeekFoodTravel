@@ -15,6 +15,22 @@ $(document).ready(() => {
         })
     })
 
+    $('.order-deprecated').click(function () {
+        let id = this.id
+        $.ajax({
+            method: "POST",
+            dataType: "html",
+            url: `/order/update/${id}`,
+            data: {
+                status: "deprecated"
+            },
+            success: () => {
+                alert("Успешно отправлено на кухню")
+                $(`#order_${id}`).hide(50)
+            }
+        })
+    })
+
     $('input.on-kitchen').click((e) => {
         let id = e.target.id
         $.ajax({

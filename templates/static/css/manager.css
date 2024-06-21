@@ -40,3 +40,8 @@
 .check.active {
   text-decoration: none;
 }
+
+.order-others {
+  text-decoration: underline;
+  cursor: pointer;
+}

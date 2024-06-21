@@ -33,15 +33,22 @@
         {% for order in orders_in_processing %}
             <div id="order_{{ order.id }}" class="order">
                 <h3>Заказ №{{ order.id }}</h3>
-                {% for user in order.users_orders %}
+                {% for user in order.user_order %}
                     {% if user.user.role == "client" %}
                         <div class="user-phone">
+                            <span class="info">Имя клиента:</span>
+                            <span>{{ user.user.lastname }} {{ user.user.firstname }}</span>
+                        </div>
+                        <div class="user-phone">
                             <span class="info">Номер клиента:</span>
-                            <a href="tel:{{ user.users.phone_number }}">{{ user.users.phone_number }}</a>
+                            <a href="tel:{{ user.user.phone_number }}">{{ user.user.phone_number }}</a>
+                        </div>
+                        <div id="{{ order.id  }}" class="order-others">
+                            Остальная информация
                         </div>
                     {% endif %}
                 {% endfor %}
-                <div class="order-info">
+                <div class="order-info" data-order-id="{{ order.id  }}">
                     {% for goods in order.goods_order %}
                         <div class="order-composition">
                             <div class="order-name">
@@ -62,14 +69,31 @@
                 <div class="order-upworked">
                     <button id="{{ order.id }}" class="button">Отправить заказ на кухню</button>
                 </div>
+                <div class="order-deprecated">
+                    <button id="{{ order.id }}" class="button">Отменить заказ</button>
+                </div>
             </div>
         {% endfor %}
         <h2>Обработанные заказы</h2>
         {% for order in orders_others %}
             <div id="order_{{ order.id }}" class="order">
                 <h3 >Заказ №{{ order.id }}</h3>
+                {% if order.status == 'wait courier' %}
+                    {% set status = 'Ожидает курьера' %}
+                {% elif order.status == 'deprecated' %}
+                    {% set status = 'Отменен' %}
+                {% elif order.status == 'in processing' %}
+                    {% set status = 'В обработке' %}
+                {% elif order.status == 'waiting kitchen' %}
+                    {% set status = 'Отправлен на кухню' %}
+                {% elif order.status == 'on kitchen' %}
+                    {% set status = 'Готовится' %}
+                {% elif order.status == 'delivered' %}
+                    {% set status = 'Доставлен' %}
+                {% endif %}
+                <span class="info">Статус: {{ status }}</span>
                 {% for user in order.user_order %}
-                    {% if 'client' == user.user.role %}
+                    {% if user.user.role == 'client' %}
                         <div class="user-phone">
                             <span class="info">Номер клиента:</span>
                             <a href="tel:{{ user.user.phone_number }}">{{ user.user.phone_number }}</a>

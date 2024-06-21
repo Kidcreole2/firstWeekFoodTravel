@@ -3,7 +3,7 @@ header {
 }
 
 .header__logo img {
-  height: 50px;
+  max-height: 50px;
   width: auto;
 }
 header .container {
@@ -42,6 +42,9 @@ form {
 }
 
 .form-component input {
+  width: 100%;
+  min-width: 100px;
+  max-width: 200px;
   outline: none;
   border: none;
   padding: 10px 20px;
