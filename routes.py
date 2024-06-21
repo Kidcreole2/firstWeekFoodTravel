@@ -13,6 +13,7 @@ from flask_login import logout_user, current_user, login_required
 from core import app, login_manager
 from models import *
 
+
 @login_manager.user_loader
 def loader_user(user_id):
     return User.query.get(user_id)
@@ -50,8 +51,8 @@ def orders_update_status(order_id):
         )
         Order.update(old_order, new_order)
         return jsonify({"message": "Заказ был успешно обновлён"}), 200
-    
-    
+
+
 # ==Basic functions==
 
 
@@ -65,27 +66,12 @@ def logout():
 # --login function--
 
 
-@app.route("/registration", methods=["GET", "POST"])
-def sign_up():
-    if request.method == "POST":
-        user = User(
-            lastname=request.form["lastname"],
-            firstname=request.form["firstname"],
-            surname=request.form["surname"],
-            login=request.form["login"],
-            password=request.form["password"],
-            role="client",
-            phone_number=request.form["phone"],
-        )
-        pprint.pprint(User.create(user))
-        return redirect("/")
-    return render_template("registrate.html")
+
 
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        # TODO make password check
         login = request.form["login"]
         print(login)
         password = request.form.get("password")

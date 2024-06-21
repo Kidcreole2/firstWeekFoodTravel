@@ -1,14 +1,15 @@
 from core import app
 from flask import render_template, request, jsonify
-from flask_login import login_required,current_user
+from flask_login import login_required, current_user
 from models import *
 from datetime import datetime as date
 import json
 
+
 def init_user_views():
     @app.route("/order/create", methods=["GET", "POST"])
     @login_required
-    def create_entity():
+    def create_order():
         if request.method == "POST":
             order_json = request.form["cart"]
             goodses = json.loads(order_json)
@@ -24,9 +25,7 @@ def init_user_views():
                 price=request.form["price"],
             )
             new_order_id = Order.create(new_order)
-            new_user_order = User_Order(
-                user_id=current_user.id, order_id=new_order_id
-            )
+            new_user_order = User_Order(user_id=current_user.id, order_id=new_order_id)
             User_Order.create(new_user_order)
             for goods in goodses:
                 new_goods_order = Goods_Order(
@@ -42,3 +41,19 @@ def init_user_views():
             return jsonify({"message": "Заказ был успешно создан"}), 200
         kitchens = User.query.filter(User.role == "kitchen").all()
         return render_template("make-order.html", kitchens=kitchens)
+
+    @app.route("/registration", methods=["GET", "POST"])
+    def sign_up():
+        if request.method == "POST":
+            user = User(
+                lastname=request.form["lastname"],
+                firstname=request.form["firstname"],
+                surname=request.form["surname"],
+                login=request.form["login"],
+                password=request.form["password"],
+                role="client",
+                phone_number=request.form["phone"],
+            )
+            pprint.pprint(User.create(user))
+            return redirect("/")
+        return render_template("registrate.html")
