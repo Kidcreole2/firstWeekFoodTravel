@@ -25,6 +25,7 @@
         <label for="password">Пароль</label>
         <input type="password" name="password" placeholder="....." id="password" />
       </div>
+      {{ captcha_html(captcha)|safe }}
       <div class="form-buttons">
         <button class="button" type="submit">Войти</button>
         <a class="button" href="/registration">Зарегестрироваться</a>

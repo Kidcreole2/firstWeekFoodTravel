@@ -65,8 +65,6 @@ def logout():
 
 # --login function--
 
-
-
 @app.route('/captcha/get', methods=['GET'])
 def captcha_get():
     if request.method == 'GET':
@@ -75,6 +73,9 @@ def captcha_get():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    if request.method == 'GET':
+        new_captcha_dict = SIMPLE_CAPTCHA.create()
+        return new_captcha_dict
     if request.method == "POST":
         c_hash = request.form.get('captcha-hash')
         c_text = request.form.get('captcha-text')
@@ -83,9 +84,8 @@ def login():
             print(login)
             password = request.form.get("password")
             roles = User.auth_user(login, password)
+            flash("wrong password/login")
             pprint.pprint(roles)
-            c_hash = request.form.get('captcha-hash')
-            c_text = request.form.get('captcha-text')
             return redirect("/")
         else:
             flash("wrong captcha")  
